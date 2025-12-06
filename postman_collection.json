@@ -1,0 +1,114 @@
+{
+  "info": {
+    "name": "Springboot Payment Orchestrator",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Purchase",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer <JWT>" },
+          { "key": "X-Correlation-ID", "value": "<uuid>" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"order_id\": \"ORD-1001\",\n  \"payment_method_token\": \"tok_abc123\",\n  \"amount\": { \"amount_cents\": 4999, \"currency\": \"USD\" },\n  \"capture\": true\n}"
+      ,
+        "url": { "raw": "https://api.example.local/api/payments/purchase", "host": ["https://api.example.local"], "path": ["api","payments","purchase"] }
+      }
+    },
+    {
+      "name": "Authorize",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer <JWT>" },
+          { "key": "X-Correlation-ID", "value": "<uuid>" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"order_id\": \"ORD-2001\",\n  \"payment_method_token\": \"tok_def456\",\n  \"amount\": { \"amount_cents\":2500, \"currency\": \"USD\" }\n}" },
+        "url": { "raw": "https://api.example.local/api/payments/authorize", "host": ["https://api.example.local"], "path": ["api","payments","authorize"] }
+      }
+    },
+    {
+      "name": "Capture",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer <JWT>" },
+          { "key": "X-Correlation-ID", "value": "<uuid>" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"authorization_id\": \"auth_456\",\n  \"amount\": { \"amount_cents\":2500, \"currency\": \"USD\" }\n}" },
+        "url": { "raw": "https://api.example.local/api/payments/capture", "host": ["https://api.example.local"], "path": ["api","payments","capture"] }
+      }
+    },
+    {
+      "name": "Void",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer <JWT>" },
+          { "key": "X-Correlation-ID", "value": "<uuid>" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"authorization_id\": \"auth_456\",\n  \"reason\": \"Customer cancellation\"\n}" },
+        "url": { "raw": "https://api.example.local/api/payments/void", "host": ["https://api.example.local"], "path": ["api","payments","void"] }
+      }
+    },
+    {
+      "name": "Refund",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer <JWT>" },
+          { "key": "X-Correlation-ID", "value": "<uuid>" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"transaction_id\": \"txn_abc123\",\n  \"amount\": { \"amount_cents\":1500, \"currency\": \"USD\" },\n  \"reason\": \"Customer returned item\"\n}" },
+        "url": { "raw": "https://api.example.local/api/payments/refund", "host": ["https://api.example.local"], "path": ["api","payments","refund"] }
+      }
+    },
+    {
+      "name": "Create Subscription",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer <JWT>" },
+          { "key": "X-Correlation-ID", "value": "<uuid>" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"customer_id\": \"cust_900\",\n  \"plan_code\": \"plan_monthly_basic\",\n  \"amount\": { \"amount_cents\":999, \"currency\": \"USD\" },\n  \"cadence\": \"MONTHLY\",\n  \"trial_days\": 14\n}" },
+        "url": { "raw": "https://api.example.local/api/subscriptions", "host": ["https://api.example.local"], "path": ["api","subscriptions"] }
+      }
+    },
+    {
+      "name": "Get Subscription",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer <JWT>" },
+          { "key": "X-Correlation-ID", "value": "<uuid>" }
+        ],
+        "url": { "raw": "https://api.example.local/api/subscriptions/sub_678", "host": ["https://api.example.local"], "path": ["api","subscriptions","sub_678"] }
+      }
+    },
+    {
+      "name": "Authorize.Net Webhook",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "X-ANet-Signature", "value": "<signature>" },
+          { "key": "X-Correlation-ID", "value": "<uuid>" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"event_id\": \"evt_987\",\n  \"event_type\": \"net.authorize.payment.authcapture.created\",\n  \"payload\": { \"transaction_id\": \"txn_abc123\", \"status\": \"CAPTURED\" }\n}" },
+        "url": { "raw": "https://api.example.local/webhooks/authorize-net", "host": ["https://api.example.local"], "path": ["webhooks","authorize-net"] }
+      }
+    }
+  ]
+}

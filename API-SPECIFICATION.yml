@@ -1,0 +1,652 @@
+openapi: 3.0.3
+info:
+  title: Springboot Payment Orchestrator API
+  version: 0.1.0
+  description: |
+    API specification (initial draft) for payment orchestration integrating with Authorize.Net sandbox.
+    Includes endpoints for Purchase, Authorize, Capture, Cancel (Void), Refund, Subscription management and Webhook listener.
+
+servers:
+  - url: https://api.example.local
+    description: Local / dev server (replace in deployment)
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  headers:
+    X-Correlation-ID:
+      description: Client or server-generated correlation id for tracing
+      schema:
+        type: string
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+        correlationId:
+          type: string
+      required: [timestamp, status, error, message, correlationId]
+
+    Amount:
+      type: object
+      properties:
+        amount_cents:
+          type: integer
+        currency:
+          type: string
+      required: [amount_cents, currency]
+
+    PurchaseRequest:
+      type: object
+      properties:
+        order_id:
+          type: string
+          description: Client-generated business order id
+        payment_method_token:
+          type: string
+          description: Tokenized payment method (gateway token)
+        amount:
+          $ref: '#/components/schemas/Amount'
+        capture:
+          type: boolean
+          description: If true perform auth+capture (purchase). If false perform auth-only.
+      required: [payment_method_token, amount]
+
+    PurchaseResponse:
+      type: object
+      properties:
+        order_id:
+          type: string
+        transaction_id:
+          type: string
+        status:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        correlation_id:
+          type: string
+      required: [order_id, transaction_id, status, amount, correlation_id]
+
+    AuthorizeRequest:
+      type: object
+      properties:
+        order_id:
+          type: string
+        payment_method_token:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+      required: [payment_method_token, amount]
+
+    AuthorizeResponse:
+      type: object
+      properties:
+        authorization_id:
+          type: string
+        status:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        correlation_id:
+          type: string
+      required: [authorization_id, status, amount, correlation_id]
+
+    CaptureRequest:
+      type: object
+      properties:
+        authorization_id:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+      required: [authorization_id, amount]
+
+    CaptureResponse:
+      type: object
+      properties:
+        capture_id:
+          type: string
+        status:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        correlation_id:
+          type: string
+      required: [capture_id, status, amount, correlation_id]
+
+    VoidRequest:
+      type: object
+      properties:
+        authorization_id:
+          type: string
+        reason:
+          type: string
+      required: [authorization_id]
+
+    VoidResponse:
+      type: object
+      properties:
+        void_id:
+          type: string
+        status:
+          type: string
+        correlation_id:
+          type: string
+      required: [void_id, status, correlation_id]
+
+    RefundRequest:
+      type: object
+      properties:
+        transaction_id:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        reason:
+          type: string
+      required: [transaction_id, amount]
+
+    RefundResponse:
+      type: object
+      properties:
+        refund_id:
+          type: string
+        status:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        correlation_id:
+          type: string
+      required: [refund_id, status, amount, correlation_id]
+
+    SubscriptionRequest:
+      type: object
+      properties:
+        customer_id:
+          type: string
+        plan_code:
+          type: string
+        amount:
+          $ref: '#/components/schemas/Amount'
+        cadence:
+          type: string
+          description: e.g., MONTHLY
+        trial_days:
+          type: integer
+      required: [customer_id, plan_code, amount, cadence]
+
+    SubscriptionResponse:
+      type: object
+      properties:
+        subscription_id:
+          type: string
+        status:
+          type: string
+        next_billing_at:
+          type: string
+          format: date-time
+        correlation_id:
+          type: string
+      required: [subscription_id, status, correlation_id]
+
+    WebhookEvent:
+      type: object
+      properties:
+        event_id:
+          type: string
+        event_type:
+          type: string
+        payload:
+          type: object
+          additionalProperties: true
+      required: [event_type, payload]
+
+security:
+  - bearerAuth: []
+
+paths:
+  /api/payments/purchase:
+    post:
+      summary: Purchase (auth + capture) or auth-only if capture=false
+      tags: [Payments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/X-Correlation-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseRequest'
+            examples:
+              sample-purchase:
+                summary: Auth+capture purchase example
+                value:
+                  order_id: "ORD-1001"
+                  payment_method_token: "tok_abc123"
+                  amount:
+                    amount_cents: 4999
+                    currency: "USD"
+                  capture: true
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.example.local/api/payments/purchase" \
+              -H "Authorization: Bearer <JWT>" \
+              -H "X-Correlation-ID: <uuid>" \
+              -H "Content-Type: application/json" \
+              -d '{"order_id":"ORD-1001","payment_method_token":"tok_abc123","amount":{"amount_cents":4999,"currency":"USD"},"capture":true}'
+      responses:
+        '200':
+          description: Purchase processed
+          headers:
+            X-Correlation-ID:
+              $ref: '#/components/headers/X-Correlation-ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseResponse'
+              examples:
+                sample-response:
+                  summary: Successful purchase response
+                  value:
+                    order_id: "ORD-1001"
+                    transaction_id: "txn_abc123"
+                    status: "CAPTURED"
+                    amount:
+                      amount_cents: 4999
+                      currency: "USD"
+                    correlation_id: "<uuid>"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized (missing/invalid JWT)
+        '409':
+          description: Idempotency conflict (duplicate key)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/payments/authorize:
+    post:
+      summary: Authorize (auth-only) a payment
+      tags: [Payments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/X-Correlation-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizeRequest'
+            examples:
+              sample-authorize:
+                summary: Auth-only example
+                value:
+                  order_id: "ORD-2001"
+                  payment_method_token: "tok_def456"
+                  amount:
+                    amount_cents: 2500
+                    currency: "USD"
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.example.local/api/payments/authorize" \
+              -H "Authorization: Bearer <JWT>" \
+              -H "X-Correlation-ID: <uuid>" \
+              -H "Content-Type: application/json" \
+              -d '{"order_id":"ORD-2001","payment_method_token":"tok_def456","amount":{"amount_cents":2500,"currency":"USD"}}'
+      responses:
+        '200':
+          description: Authorization created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizeResponse'
+              examples:
+                sample-authorize-response:
+                  summary: Authorization response
+                  value:
+                    authorization_id: "auth_456"
+                    status: "AUTHORIZED"
+                    amount:
+                      amount_cents: 2500
+                      currency: "USD"
+                    correlation_id: "<uuid>"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+
+  /api/payments/capture:
+    post:
+      summary: Capture a previously authorized transaction
+      tags: [Payments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/X-Correlation-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaptureRequest'
+            examples:
+              sample-capture:
+                summary: Capture example
+                value:
+                  authorization_id: "auth_456"
+                  amount:
+                    amount_cents: 2500
+                    currency: "USD"
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.example.local/api/payments/capture" \
+              -H "Authorization: Bearer <JWT>" \
+              -H "X-Correlation-ID: <uuid>" \
+              -H "Content-Type: application/json" \
+              -d '{"authorization_id":"auth_456","amount":{"amount_cents":2500,"currency":"USD"}}'
+      responses:
+        '200':
+          description: Capture successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaptureResponse'
+              examples:
+                sample-capture-response:
+                  summary: Successful capture
+                  value:
+                    capture_id: "cap_789"
+                    status: "CAPTURED"
+                    amount:
+                      amount_cents: 2500
+                      currency: "USD"
+                    correlation_id: "<uuid>"
+        '400':
+          description: Invalid request or bad state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+
+  /api/payments/void:
+    post:
+      summary: Void / Cancel an authorization before settlement
+      tags: [Payments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/X-Correlation-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoidRequest'
+            examples:
+              sample-void:
+                summary: Void example
+                value:
+                  authorization_id: "auth_456"
+                  reason: "Customer cancellation"
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.example.local/api/payments/void" \
+              -H "Authorization: Bearer <JWT>" \
+              -H "X-Correlation-ID: <uuid>" \
+              -H "Content-Type: application/json" \
+              -d '{"authorization_id":"auth_456","reason":"Customer cancellation"}'
+      responses:
+        '200':
+          description: Void accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidResponse'
+              examples:
+                sample-void-response:
+                  summary: Void response
+                  value:
+                    void_id: "void_012"
+                    status: "VOIDED"
+                    correlation_id: "<uuid>"
+        '400':
+          description: Invalid request or cannot void
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+
+  /api/payments/refund:
+    post:
+      summary: Refund a captured transaction (full or partial)
+      tags: [Payments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/X-Correlation-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+            examples:
+              sample-refund:
+                summary: Partial refund example
+                value:
+                  transaction_id: "txn_abc123"
+                  amount:
+                    amount_cents: 1500
+                    currency: "USD"
+                  reason: "Customer returned item"
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.example.local/api/payments/refund" \
+              -H "Authorization: Bearer <JWT>" \
+              -H "X-Correlation-ID: <uuid>" \
+              -H "Content-Type: application/json" \
+              -d '{"transaction_id":"txn_abc123","amount":{"amount_cents":1500,"currency":"USD"},"reason":"Customer returned item"}'
+      responses:
+        '200':
+          description: Refund processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+              examples:
+                sample-refund-response:
+                  summary: Refund response
+                  value:
+                    refund_id: "ref_345"
+                    status: "REFUNDED"
+                    amount:
+                      amount_cents: 1500
+                      currency: "USD"
+                    correlation_id: "<uuid>"
+        '400':
+          description: Invalid request or refund not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+
+  /api/subscriptions:
+    post:
+      summary: Create a subscription (recurring billing)
+      tags: [Subscriptions]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/headers/X-Correlation-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionRequest'
+            examples:
+              sample-subscription:
+                summary: Monthly subscription example
+                value:
+                  customer_id: "cust_900"
+                  plan_code: "plan_monthly_basic"
+                  amount:
+                    amount_cents: 999
+                    currency: "USD"
+                  cadence: "MONTHLY"
+                  trial_days: 14
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.example.local/api/subscriptions" \
+              -H "Authorization: Bearer <JWT>" \
+              -H "X-Correlation-ID: <uuid>" \
+              -H "Content-Type: application/json" \
+              -d '{"customer_id":"cust_900","plan_code":"plan_monthly_basic","amount":{"amount_cents":999,"currency":"USD"},"cadence":"MONTHLY","trial_days":14}'
+      responses:
+        '201':
+          description: Subscription created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+              examples:
+                sample-subscription-response:
+                  summary: Subscription created
+                  value:
+                    subscription_id: "sub_678"
+                    status: "ACTIVE"
+                    next_billing_at: "2026-01-06T00:00:00Z"
+                    correlation_id: "<uuid>"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+
+  /api/subscriptions/{subscriptionId}:
+    get:
+      summary: Get subscription details
+      tags: [Subscriptions]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/headers/X-Correlation-ID'
+      responses:
+        '200':
+          description: Subscription details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+              examples:
+                sample-subscription-get-response:
+                  summary: Subscription details
+                  value:
+                    subscription_id: "sub_678"
+                    status: "ACTIVE"
+                    next_billing_at: "2026-01-06T00:00:00Z"
+                    correlation_id: "<uuid>"
+        '404':
+          description: Subscription not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /webhooks/authorize-net:
+    post:
+      summary: Webhook listener for Authorize.Net events
+      description: |
+        Endpoint to receive webhook events from Authorize.Net. Requests must include the provider signature header (Authorize.Net provides a signature header).
+        The server validates signature and enqueues the event for processing.
+      tags: [Webhooks]
+      parameters:
+        - name: X-Correlation-ID
+          in: header
+          schema:
+            type: string
+          required: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookEvent'
+            examples:
+              sample-webhook-event:
+                summary: Simple webhook event example
+                value:
+                  event_id: "evt_987"
+                  event_type: "net.authorize.payment.authcapture.created"
+                  payload:
+                    transaction_id: "txn_abc123"
+                    status: "CAPTURED"
+      x-codeSamples:
+        - lang: cURL
+          source: |
+            curl -X POST "https://api.example.local/webhooks/authorize-net" \
+              -H "Content-Type: application/json" \
+              -H "X-ANet-Signature: <signature>" \
+              -H "X-Correlation-ID: <uuid>" \
+              -d '{"event_id":"evt_987","event_type":"net.authorize.payment.authcapture.created","payload":{"transaction_id":"txn_abc123","status":"CAPTURED"}}'
+      responses:
+        '202':
+          description: Accepted for processing
+        '400':
+          description: Invalid payload or signature
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+tags:
+  - name: Payments
+    description: Payment operations (purchase, authorize, capture, void, refund)
+  - name: Subscriptions
+    description: Subscription and recurring billing management
+  - name: Webhooks
+    description: Webhook endpoints for gateway events

@@ -1,2 +1,243 @@
 # springboot-payment-orchestrator
-A robust backend application that handles payment integration with Authorize.Net Sandbox API. The vision is for all the Developers to work on Payment gateway
+
+A robust Spring Boot backend that orchestrates payments through the Authorize.Net Sandbox. This repository contains the design, scaffolding, and (eventually) a production-capable implementation supporting core payment flows (purchase, authorize/capture, void, refund), recurring billing, idempotency, webhook handling, JWT authentication, tracing, observability, and audit logs.
+
+---
+
+## 1. Project Overview
+
+`springboot-payment-orchestrator` is a backend service that integrates directly with the Authorize.Net Sandbox to provide a developer-friendly, auditable, and secure payment orchestration layer. The service exposes REST endpoints for payment operations, persists order and transaction history, enforces idempotency, and includes a queue-backed webhook processor for asynchronous events.
+
+This repository is organized into three phased deliverables: Foundation (phase 1), Core Payment Flows (phase 2), and Observability/Testing & Final Integrations (phase 3). See `PROJECT_BLUEPRINT.md` for the full plan.
+
+## 2. Vision & Requirements
+
+- Support core payment flows: Purchase (auth+capture), Authorize → Capture, Cancel (void pre-capture), Refund (full + partial).
+- Support subscriptions/recurring billing via Authorize.Net recurring APIs.
+- Ensure safe retries and idempotency (Idempotency-Key support).
+- Handle async events via webhooks and queue-based processing (RabbitMQ recommended for local/dev).
+- Include distributed tracing (correlation IDs & OpenTelemetry), metrics, and structured logs.
+- Secure internal public endpoints with JWT authentication.
+- Persist orders, transactions, subscriptions, and audit logs in PostgreSQL.
+- Unit tests and integration tests with JaCoCo coverage reporting (target ≥80%).
+
+## 3. Architecture Summary
+
+- Single Spring Boot application (modular monolith) with clear package boundaries:
+	- API layer (controllers, DTOs, validation)
+	- Service layer (business logic orchestration)
+	- Gateway/integration layer (Authorize.Net SDK wrapper)
+	- Persistence layer (Spring Data JPA + Flyway migrations)
+	- Queue layer (RabbitMQ + Spring AMQP) for webhook processing
+	- Observability (OpenTelemetry, Micrometer, Jaeger, Prometheus)
+	- Security (Spring Security + JWT)
+
+- Flow examples:
+	- Purchase: API -> PaymentService -> Authorize.Net -> persist transaction -> update order -> emit events
+	- Webhook: Authorize.Net -> webhook endpoint -> validate signature -> enqueue -> worker -> process & reconcile
+
+## 4. Tech Stack
+
+- Language & Framework: Java 17 (recommended) + Spring Boot 3.x
+- Build: Maven (pom.xml)
+- Persistence: PostgreSQL, Spring Data JPA, Flyway
+- Messaging: RabbitMQ + Spring AMQP (dev queueing)
+- Payment Gateway SDK: Authorize.Net official Java SDK (`anet-java-sdk`)
+- Security: Spring Security + JWT (Nimbus JOSE / JJWT)
+- Resilience: Resilience4j (retry/circuit-breaker)
+- Observability: OpenTelemetry, Micrometer, Jaeger, Prometheus
+- Testing: JUnit 5, Mockito, Testcontainers (Postgres, RabbitMQ), JaCoCo for coverage
+- CI: GitHub Actions (recommended)
+
+## 5. High-level API List
+
+The exact API will be implemented in Phase 1/2. High-level endpoints (subject to small changes):
+
+- Authentication
+	- `POST /api/auth/login` — (dev) issue a JWT for testing (or integrate with external IdP)
+- Orders & Payments
+	- `POST /api/orders` — create order (initial)
+	- `GET /api/orders/{orderId}` — fetch order
+	- `POST /api/payments/purchase` — purchase (auth + capture)
+	- `POST /api/payments/authorize` — authorize only
+	- `POST /api/payments/capture` — capture an existing authorization
+	- `POST /api/payments/void` — void/cancel before settlement
+	- `POST /api/payments/refund` — refund (full/partial)
+- Subscriptions
+	- `POST /api/subscriptions` — create subscription
+	- `GET /api/subscriptions/{id}` — subscription details
+- Webhooks
+	- `POST /webhooks/authorize-net` — webhook receiver (validates signature, enqueues)
+
+Notes:
+- All mutating endpoints support `Idempotency-Key` header. Include `X-Correlation-ID` header to trace requests across services.
+
+## 6. Setup Instructions
+
+Requirements:
+- Java 17 (or 21 if you prefer) installed and `JAVA_HOME` configured.
+- Maven 3.8+ installed.
+- Docker & Docker Compose (for local Postgres, RabbitMQ, Jaeger, Prometheus) — required for full local stack.
+
+### Java & Maven
+
+Install Java 17 and Maven. For Windows PowerShell, example commands:
+
+```powershell
+# Verify Java
+java -version
+# Verify Maven
+mvn -v
+```
+
+### Database setup (local with Docker Compose)
+
+Docker Compose will start a local PostgreSQL instance for development. The repo includes a `docker-compose.yml` (Phase 1) that starts Postgres, RabbitMQ, and Jaeger.
+
+Start the dev stack:
+
+```powershell
+docker-compose up -d
+```
+
+The default Postgres connection (example):
+
+- Host: `localhost`
+- Port: `5432`
+- DB: `payments_db`
+- User: `payments_user`
+- Password: `payments_pass`
+
+These are placeholders — the real values are configured via environment variables. Do NOT commit production credentials.
+
+### Environment variables
+
+Create a `.env` file or set environment variables in your shell. Minimal set for dev:
+
+```text
+SPRING_PROFILES_ACTIVE=dev
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/payments_db
+SPRING_DATASOURCE_USERNAME=payments_user
+SPRING_DATASOURCE_PASSWORD=payments_pass
+AUTHORIZE_NET_API_LOGIN_ID=<your-sandbox-api-login-id>
+AUTHORIZE_NET_TRANSACTION_KEY=<your-sandbox-transaction-key>
+AUTHORIZE_NET_ENV=sandbox
+JWT_SECRET=<dev-jwt-secret> # for HS256 dev tokens
+RABBITMQ_URL=amqp://guest:guest@localhost:5672/
+```
+
+Notes:
+- In production, use Vault/KMS for secrets and RS256 keypairs for JWT.
+- `AUTHORIZE_NET_API_LOGIN_ID` and `AUTHORIZE_NET_TRANSACTION_KEY` are obtained from your Authorize.Net sandbox account (see section 10).
+
+### Running Docker Compose (dev)
+
+```powershell
+docker-compose up -d
+# Verify services
+docker-compose ps
+```
+
+If you modify Docker Compose, re-run `docker-compose up -d`.
+
+## 7. Running the Application
+
+From project root, run:
+
+```powershell
+mvn clean package -DskipTests
+java -jar target/springboot-payment-orchestrator-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
+```
+
+Or run with Maven directly (dev):
+
+```powershell
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+Application will start on default port `8080` unless changed in `application.yml`.
+
+## 8. Running Unit Tests & Generating Coverage Report
+
+Run unit tests and generate JaCoCo coverage report:
+
+```powershell
+mvn clean test
+mvn jacoco:report
+
+# Open report
+start target/site/jacoco/index.html
+```
+
+CI will run tests and fail the build if coverage is below configured threshold (to be defined). Integration tests using Testcontainers require Docker available on CI runners and may be configured to run selectively.
+
+## 9. Folder Structure
+
+Initial (phase 1) expected structure:
+
+```
+springboot-payment-orchestrator/
+├── README.md
+├── PROJECT_BLUEPRINT.md
+├── pom.xml
+├── docker-compose.yml
+├── src/
+│   ├── main/
+│   │   ├── java/com/example/payment/...
+│   │   └── resources/application.yml
+│   └── test/
+└── docs/
+```
+
+Final (phase 3) expected structure:
+
+```
+springboot-payment-orchestrator/
+├── README.md
+├── PROJECT_BLUEPRINT.md
+├── PROJECT_STRUCTURE.md
+├── Architecture.md
+├── OBSERVABILITY.md
+├── API-SPECIFICATION.yml (or POSTMAN_COLLECTION.json)
+├── docker-compose.yml
+├── .github/workflows/ci.yml
+├── pom.xml
+├── src/
+│   ├── main/
+│   │   ├── java/com/example/payment/api
+│   │   ├── java/com/example/payment/service
+│   │   ├── java/com/example/payment/gateway
+│   │   ├── java/com/example/payment/persistence
+│   │   ├── java/com/example/payment/idempotency
+│   │   ├── java/com/example/payment/observability
+│   │   └── resources/
+│   └── test/
+└── docs/
+```
+
+## 10. Notes on Authorize.Net Sandbox setup
+
+1. Create a sandbox account:
+	 - Sign up at https://developer.authorize.net (Sandbox account)
+2. Obtain credentials:
+	 - API Login ID
+	 - Transaction Key
+	 - Webhook Signing Key (for webhook signature verification)
+3. Use the official Authorize.Net Java SDK (`anet-java-sdk`) and configure with Sandbox endpoints (the SDK handles this when `ENVIRONMENT.SANDBOX` is selected).
+4. Tokenization & card data handling:
+	 - Do NOT store PAN or CVV in the application or logs.
+	 - Use Accept.js or the CIM/tokenization features if client-side collection is required.
+	 - Persist only `payment_token`, `card_last4`, and `card_brand`.
+5. Webhook configuration:
+	 - Configure webhook endpoints in the sandbox merchant interface and use the signing key to validate incoming events.
+
+## Additional Notes
+
+- Idempotency: include `Idempotency-Key` header on mutating requests to avoid duplicate charges.
+- Correlation: include `X-Correlation-ID` for tracing; if missing the service will generate one.
+- Security: this README assumes development mode uses HS256 for JWT for convenience; rotate to RS256 and a proper key-management flow for production.
+
+---
+
+If you'd like, I can now scaffold Phase 1 (project skeleton, `pom.xml`, Flyway migrations, `docker-compose.yml`, and a minimal controller) once you confirm Java and message broker choices. Otherwise, I can produce an OpenAPI draft next.
+
