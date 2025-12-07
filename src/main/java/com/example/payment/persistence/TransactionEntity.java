@@ -37,6 +37,18 @@ public class TransactionEntity {
     @Version
     private Long version;
 
+    @Column(name = "gateway")
+    private String gateway;
+
+    @Column(name = "gateway_transaction_id")
+    private String gatewayTransactionId;
+
+    @Column(name = "gateway_response")
+    private String gatewayResponse;
+
+    @Column(name = "gateway_message")
+    private String gatewayMessage;
+
     // getters and setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -56,4 +68,12 @@ public class TransactionEntity {
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
     public Long getVersion() { return version; }
     public void setVersion(Long version) { this.version = version; }
+    public String getGateway() { return gateway; }
+    public void setGateway(String gateway) { this.gateway = gateway; }
+    public String getGatewayTransactionId() { return gatewayTransactionId; }
+    public void setGatewayTransactionId(String gatewayTransactionId) { this.gatewayTransactionId = gatewayTransactionId; }
+    public String getGatewayResponse() { return gatewayResponse; }
+    public void setGatewayResponse(String gatewayResponse) { this.gatewayResponse = gatewayResponse; }
+    public String getGatewayMessage() { return gatewayMessage; }
+    public void setGatewayMessage(String gatewayMessage) { this.gatewayMessage = gatewayMessage; }
 }

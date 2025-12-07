@@ -5,3 +5,4 @@ ALTER TABLE idempotency_keys ADD COLUMN expires_at TIMESTAMP;
 ALTER TABLE idempotency_keys ADD COLUMN response_status INTEGER;
 ALTER TABLE idempotency_keys ADD COLUMN response_headers CLOB;
 ALTER TABLE idempotency_keys ADD COLUMN status VARCHAR(50);
+
