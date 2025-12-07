@@ -241,3 +241,77 @@ springboot-payment-orchestrator/
 
 If you'd like, I can now scaffold Phase 1 (project skeleton, `pom.xml`, Flyway migrations, `docker-compose.yml`, and a minimal controller) once you confirm Java and message broker choices. Otherwise, I can produce an OpenAPI draft next.
 
+## How to run the app locally (Master Prompt 6 Baseline)
+
+This section describes the baseline verification steps for Master Prompt 6. The project at this stage includes a minimal, no-op payment gateway implementation and service/mapper stubs so the application can run locally for integration and idempotency testing.
+
+1. Build the project (skip tests for a fast local check):
+
+```powershell
+mvn clean verify -DskipTests
+```
+
+2. Run the generated JAR with the `local` profile:
+
+```powershell
+java -jar target/*.jar --spring.profiles.active=local
+```
+
+3. Health check:
+
+- URL: `GET http://localhost:8080/api/v1/health`
+- Example (PowerShell):
+
+```powershell
+Invoke-RestMethod -Uri 'http://localhost:8080/api/v1/health' -Method GET
+```
+
+4. Obtain a development JWT token (dev-only endpoint):
+
+- URL: `POST http://localhost:8080/api/v1/auth/dev/token`
+- Request body (JSON):
+
+```json
+{"username":"devuser","roles":["ROLE_USER"]}
+```
+
+- Example (PowerShell):
+
+```powershell
+$body = @{ username = 'devuser'; roles = @('ROLE_USER') } | ConvertTo-Json -Compress
+Invoke-RestMethod -Uri 'http://localhost:8080/api/v1/auth/dev/token' -Method Post -Body $body -ContentType 'application/json'
+```
+
+5. Create an order with idempotency (example):
+
+- URL: `POST http://localhost:8080/api/v1/orders`
+- Required headers:
+	- `Authorization: Bearer <token>` (use the token returned above)
+	- `Idempotency-Key: <unique-key>`
+
+- Example payload (JSON):
+
+```json
+{
+	"externalOrderId": "ext-123",
+	"customerId": "cust-1",
+	"amountCents": 1500,
+	"currency": "USD"
+}
+```
+
+- Example (PowerShell):
+
+```powershell
+$token = '<paste-token-here>'
+$body = @{ externalOrderId = 'ext-123'; customerId = 'cust-1'; amountCents = 1500; currency = 'USD' } | ConvertTo-Json -Compress
+Invoke-RestMethod -Uri 'http://localhost:8080/api/v1/orders' -Method Post -Body $body -ContentType 'application/json' -Headers @{ Authorization = "Bearer $token"; 'Idempotency-Key' = 'my-key-1' }
+```
+
+6. Notes about the current baseline:
+
+- A no-op payment gateway bean is configured in this baseline so the application starts without a production gateway implementation. This is intended for local testing of API wiring, idempotency, and persistence behavior.
+- No changes to security rules, DB entities, or core business logic were made as part of this baseline — only service/gateway/mapper stubs and the idempotency TypeReference fix were added to enable runtime verification.
+
+If you want, I can now create a lightweight README snippet showing cURL examples or commit these changes for you (I will make a single clean commit including the above files).
+

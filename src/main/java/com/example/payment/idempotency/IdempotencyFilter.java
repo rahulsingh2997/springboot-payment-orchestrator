@@ -65,13 +65,13 @@ public class IdempotencyFilter extends OncePerRequestFilter {
             response.setStatus(status);
             // restore headers if present
             if (existing.getResponseHeaders() != null && !existing.getResponseHeaders().isEmpty()) {
-                try {
-                    com.fasterxml.jackson.databind.ObjectMapper om = new com.fasterxml.jackson.databind.ObjectMapper();
-                    java.util.Map<String,String> headers = om.readValue(existing.getResponseHeaders(), java.util.Map.class);
-                    headers.forEach(response::setHeader);
-                } catch (Exception ex) {
-                    log.warn("Failed to parse stored response headers", ex);
-                }
+            try {
+                com.fasterxml.jackson.databind.ObjectMapper om = new com.fasterxml.jackson.databind.ObjectMapper();
+                java.util.Map<String,String> headers = om.readValue(existing.getResponseHeaders(), new com.fasterxml.jackson.core.type.TypeReference<java.util.Map<String,String>>(){});
+                headers.forEach(response::setHeader);
+            } catch (Exception ex) {
+                log.warn("Failed to parse stored response headers", ex);
+            }
             }
             response.setContentType("application/json");
             response.getWriter().write(existing.getResponseBody() != null ? existing.getResponseBody() : "{}");
