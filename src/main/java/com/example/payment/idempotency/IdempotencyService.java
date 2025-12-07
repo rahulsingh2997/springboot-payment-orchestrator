@@ -63,12 +63,15 @@ public class IdempotencyService {
         Optional<IdempotencyKeyEntity> existing = repository.findById(key);
         if (existing.isPresent()) {
             IdempotencyKeyEntity e = existing.get();
+            // If we already have a saved response snapshot, return REPLAY first
+            // (this ensures repeated requests with the same key return the same
+            // response even if minor hash differences occur due to whitespace/encoding)
+            if (e.getResponseBody() != null) {
+                return new ClaimResult(ClaimResult.Type.REPLAY, e);
+            }
             String storedHash = e.getRequestHash();
             if (storedHash != null && !storedHash.equals(requestHash)) {
                 return new ClaimResult(ClaimResult.Type.CONFLICT, e);
-            }
-            if (e.getResponseBody() != null) {
-                return new ClaimResult(ClaimResult.Type.REPLAY, e);
             }
             // existing claim but no response yet -> allow processing (NEW)
             return new ClaimResult(ClaimResult.Type.NEW, e);

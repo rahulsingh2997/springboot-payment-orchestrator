@@ -2,7 +2,7 @@ package com.example.payment.events;
 
 import java.time.Instant;
 
-public class PaymentCapturedEvent {
+public class PaymentAuthorizedEvent {
     private final String orderId;
     private final String transactionId;
     private final Long amountCents;
@@ -10,7 +10,7 @@ public class PaymentCapturedEvent {
     private final Instant timestamp;
     private final String eventSchemaVersion;
 
-    public PaymentCapturedEvent(String orderId, String transactionId, Long amountCents, String correlationId, Instant timestamp, String eventSchemaVersion) {
+    public PaymentAuthorizedEvent(String orderId, String transactionId, Long amountCents, String correlationId, Instant timestamp, String eventSchemaVersion) {
         this.orderId = orderId;
         this.transactionId = transactionId;
         this.amountCents = amountCents;

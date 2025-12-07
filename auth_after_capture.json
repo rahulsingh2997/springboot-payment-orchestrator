@@ -1,0 +1,1 @@
+{"path":"","correlationId":"app-db06cab6-124f-47eb-922a-817c5995c0ad-1765101804","error":"Invalid Order State","message":"Order must be in PENDING state to authorize. Current=CAPTURED","timestamp":"2025-12-07T10:03:24.831Z","status":409}

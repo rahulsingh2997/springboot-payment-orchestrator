@@ -8,12 +8,18 @@ import net.authorize.api.controller.CreateTransactionController;
 import net.authorize.api.controller.base.ApiOperationBase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import com.example.payment.gateway.GatewayException;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Component
 public class AuthorizeNetSandboxGateway implements AuthorizeNetGateway {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthorizeNetSandboxGateway.class);
 
     @Value("${authorize.net.api.login:}")
     private String apiLogin;
@@ -44,6 +50,8 @@ public class AuthorizeNetSandboxGateway implements AuthorizeNetGateway {
         }
 
         try {
+            String cid = MDC.get("correlationId");
+            log.info("[gateway.authorize] correlationId={} externalId={} amount={}", cid, request.getExternalId(), request.getAmount());
             initMerchantAuth();
 
             TransactionRequestType txnRequest = new TransactionRequestType();
@@ -83,10 +91,8 @@ public class AuthorizeNetSandboxGateway implements AuthorizeNetGateway {
             }
             return out;
         } catch (Exception ex) {
-            AuthorizeNetResponse r = new AuthorizeNetResponse();
-            r.setSuccess(false);
-            r.setMessage("Exception: " + ex.getMessage());
-            return r;
+            log.error("[gateway.authorize] exception correlationId={}", MDC.get("correlationId"), ex);
+            throw new GatewayException("AuthorizeNet authorize failed", ex, true);
         }
     }
 
@@ -101,6 +107,8 @@ public class AuthorizeNetSandboxGateway implements AuthorizeNetGateway {
         }
 
         try {
+            String cid = MDC.get("correlationId");
+            log.info("[gateway.capture] correlationId={} transactionId={}", cid, transactionId);
             initMerchantAuth();
 
             TransactionRequestType txnRequest = new TransactionRequestType();
@@ -126,15 +134,14 @@ public class AuthorizeNetSandboxGateway implements AuthorizeNetGateway {
             }
             return out;
         } catch (Exception ex) {
-            AuthorizeNetResponse r = new AuthorizeNetResponse();
-            r.setSuccess(false);
-            r.setMessage("Exception: " + ex.getMessage());
-            return r;
+            log.error("[gateway.capture] exception correlationId={}", MDC.get("correlationId"), ex);
+            throw new GatewayException("AuthorizeNet capture failed", ex, true);
         }
     }
 
     @Override
     public AuthorizeNetResponse voidTransaction(String transactionId) {
+        log.info("[gateway.void] not implemented sandbox correlationId={}", MDC.get("correlationId"));
         AuthorizeNetResponse r = new AuthorizeNetResponse();
         r.setSuccess(false);
         r.setMessage("voidTransaction not implemented in sandbox gateway");
@@ -143,6 +150,7 @@ public class AuthorizeNetSandboxGateway implements AuthorizeNetGateway {
 
     @Override
     public AuthorizeNetResponse refund(String transactionId, long amountCents) {
+        log.info("[gateway.refund] not implemented sandbox correlationId={}", MDC.get("correlationId"));
         AuthorizeNetResponse r = new AuthorizeNetResponse();
         r.setSuccess(false);
         r.setMessage("refund not implemented in sandbox gateway");

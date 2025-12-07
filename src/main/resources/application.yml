@@ -1,13 +1,15 @@
 server:
   port: 8080
 
+# Single-file local configuration (only one environment: local)
 spring:
   application:
     name: payment-orchestrator
   profiles:
     active: local
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
 
-# Phase-1 local H2 datasource and Flyway
   datasource:
     url: jdbc:h2:mem:paymentdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
@@ -30,24 +32,36 @@ logging:
 
 security:
   jwt:
-    secret: change-me-in-dev
-
-# Datasource intentionally left blank for Phase 1; DataSource auto-configuration is disabled to allow app boot without DB.
-# Uncomment and configure for local DB when enabling persistence
-# spring:
-#   datasource:
-#     url: jdbc:postgresql://localhost:5432/payments_db
-#     username: payments_user
-#     password: payments_pass
-#   jpa:
-#     hibernate:
-#       ddl-auto: validate
-#     properties:
-#       hibernate:
-#         format_sql: true
-
-app:
+      authorize-net:
+        api:
+          login-id: ${AUTHNET_LOGIN_ID:9dJX3rG8dg}
+          transaction-key: ${AUTHNET_TRANSACTION_KEY:2n9Xh2t6Pt6e2Y4B}
+          environment: ${AUTHNET_ENV:SANDBOX}
+          endpoint: https://apitest.authorize.net/xml/v1/request.api
+        webhook:
+          signature-key: ${AUTHNET_WEBHOOK_SIGNATURE_KEY:FD5E029A9561CF54CCB14075AA22DC5257591D0BA9C01C3BE57E993E42833C3B37165E089EBBDA5576FC63A9FD8D6FB25178CF18BCC9434D3EF04C08BF890BA0}
+          enabled: true
   authorize-net:
     api-login-id: ${AUTHORIZE_NET_API_LOGIN_ID:}
     transaction-key: ${AUTHORIZE_NET_TRANSACTION_KEY:}
     environment: ${AUTHORIZE_NET_ENV:sandbox}
+
+# Authorize.Net signature key (hex). Replace with your production key when needed.
+authorize:
+  net:
+    signatureKey: "FD5E029A9561CF54CCB14075AA22DC5257591D0BA9C01C3BE57E993E42833C3B37165E089EBBDA5576FC63A9FD8D6FB25178CF18BCC9434D3EF04C08BF890BA0"
+
+# Actuator: expose health and info for local testing; keep shutdown endpoint disabled
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    shutdown:
+      enabled: false
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true

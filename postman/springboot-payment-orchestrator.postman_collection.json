@@ -1,0 +1,199 @@
+{
+  "info": {
+    "name": "springboot-payment-orchestrator",
+    "_postman_id": "b8f3e6c0-0000-4000-8000-000000000000",
+    "description": "Postman collection for local testing: health, dev auth token, webhooks (signed).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "signatureKeyHex",
+      "value": "REPLACE_WITH_128_HEX",
+      "type": "string"
+    },
+    {
+      "key": "devJwt",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health - GET /actuator/health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/actuator/health"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Dev Token - POST /api/v1/auth/dev/token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/v1/auth/dev/token"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Save returned token to collection variable 'devJwt' if present in response",
+              "try {",
+              "  const json = pm.response.json();",
+              "  if (json && json.token) {",
+              "    pm.collectionVariables.set('devJwt', json.token);",
+              "  } else if (json && json.access_token) {",
+              "    pm.collectionVariables.set('devJwt', json.access_token);",
+              "  }",
+              "} catch (e) {",
+              "  // ignore parse errors",
+              "}"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "Webhook - Send (valid signature)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{devJwt}}",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"webhook-123\",\n  \"event\": \"PAYMENT.AUTHORIZED\",\n  \"amount\": 100.00,\n  \"currency\": \"USD\",\n  \"orderId\": \"ord-123\",\n  \"timestamp\": \"2025-12-07T12:00:00Z\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/v1/webhooks"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Compute Authorize.Net style header: X-ANET-Signature: SHA512=<hex>",
+              "const body = pm.request.body && pm.request.body.raw ? pm.request.body.raw : '';",
+              "// Prefer environment variable name AUTHNET_WEBHOOK_SIGNATURE_KEY, fall back to collection/global 'signatureKeyHex'",
+              "let keyHex = pm.environment.get('AUTHNET_WEBHOOK_SIGNATURE_KEY') || pm.collectionVariables.get('signatureKeyHex') || pm.environment.get('signatureKeyHex') || pm.globals.get('signatureKeyHex');",
+              "if (!keyHex || keyHex === 'REPLACE_WITH_128_HEX') {",
+              "  console.warn('Webhook signature key not set. Set environment variable AUTHNET_WEBHOOK_SIGNATURE_KEY or collection variable \"signatureKeyHex\".');",
+              "} else {",
+              "  const key = CryptoJS.enc.Hex.parse(keyHex);",
+              "  const hmac = CryptoJS.HmacSHA512(body, key);",
+              "  const hex = hmac.toString(CryptoJS.enc.Hex);",
+              "  // Ensure header is set properly",
+              "  pm.request.headers.upsert({ key: 'X-ANET-Signature', value: 'SHA512=' + hex });",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201 or 200', function () {",
+              "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "pm.test('Show response', function () {",
+              "  console.log(pm.response.text());",
+              "});"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "Webhook - Send (invalid signature)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"webhook-invalid\",\n  \"event\": \"PAYMENT.FAILED\",\n  \"amount\": 50.00,\n  \"currency\": \"USD\",\n  \"orderId\": \"ord-999\",\n  \"timestamp\": \"2025-12-07T12:30:00Z\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/api/v1/webhooks"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Intentionally compute a wrong signature by using a modified key",
+              "const body = pm.request.body && pm.request.body.raw ? pm.request.body.raw : '';",
+              "// Prefer environment variable name AUTHNET_WEBHOOK_SIGNATURE_KEY, fall back to collection/global 'signatureKeyHex'",
+              "let keyHex = pm.environment.get('AUTHNET_WEBHOOK_SIGNATURE_KEY') || pm.collectionVariables.get('signatureKeyHex') || pm.environment.get('signatureKeyHex') || pm.globals.get('signatureKeyHex');",
+              "if (!keyHex) keyHex = 'deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef';",
+              "const wrongKeyHex = keyHex.substring(0, 64) + '0'.repeat(Math.max(0, 64 - 0));",
+              "const key = CryptoJS.enc.Hex.parse(wrongKeyHex);",
+              "const hmac = CryptoJS.HmacSHA512(body, key);",
+              "const hex = hmac.toString(CryptoJS.enc.Hex);",
+              "pm.request.headers.upsert({ key: 'X-ANET-Signature', value: 'SHA512=' + hex });"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expect 401 on invalid signature', function () {",
+              "  pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "response": []
+    }
+  ]
+}

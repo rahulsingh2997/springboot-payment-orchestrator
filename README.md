@@ -315,3 +315,147 @@ Invoke-RestMethod -Uri 'http://localhost:8080/api/v1/orders' -Method Post -Body 
 
 If you want, I can now create a lightweight README snippet showing cURL examples or commit these changes for you (I will make a single clean commit including the above files).
 
+## Order Operations (Authorize, Capture, Void, Refund)
+
+This service exposes operations to manage the lifecycle of payment authorizations and captures for `Order` resources. Each operation is a server-side action that calls the `PaymentService`/gateway and persists a `Transaction` record.
+
+- **Authorize**: Reserve funds against a payment method (authorization only). Use this when you want to verify funds without capturing them immediately.
+- **Capture**: Capture previously authorized funds. This converts an authorization into a settled charge (or instructs the gateway to capture the authorization).
+- **Void**: Cancel an authorization before it is captured (pre-settlement). Use this to cancel an authorization to avoid capture.
+- **Refund**: Return funds for a captured transaction (full or partial refund).
+
+### Required headers
+
+- `Authorization: Bearer <token>` — JWT dev token (use `POST /api/v1/auth/dev/token` to mint a local dev token).
+- `Idempotency-Key: <unique-key>` — Required for mutating operations to support safe retries; supply a unique value per logical operation.
+- Optional: `X-Correlation-ID: <uuid>` — helpful for tracing; the service will generate one if missing.
+
+### Endpoint paths
+
+- `POST /api/v1/orders/{orderId}/authorize` — authorize only
+- `POST /api/v1/orders/{orderId}/capture` — capture an authorization
+- `POST /api/v1/orders/{orderId}/void` — void an authorization (pre-capture)
+- `POST /api/v1/orders/{orderId}/refund` — refund a captured transaction (JSON body may include `amountCents`)
+
+---
+
+### Examples — PowerShell (Invoke-RestMethod)
+
+Replace `<token>`, `<orderId>` and `<idempotency-key>` before running.
+
+Authorize (PowerShell):
+```powershell
+$headers = @{ Authorization = "Bearer <token>"; 'Idempotency-Key' = '<idempotency-key>' }
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/orders/<orderId>/authorize" -Headers $headers
+```
+
+Capture (PowerShell):
+```powershell
+$headers = @{ Authorization = "Bearer <token>"; 'Idempotency-Key' = '<idempotency-key>' }
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/orders/<orderId>/capture" -Headers $headers
+```
+
+Void (PowerShell):
+```powershell
+$headers = @{ Authorization = "Bearer <token>"; 'Idempotency-Key' = '<idempotency-key>' }
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/orders/<orderId>/void" -Headers $headers
+```
+
+Refund (PowerShell, with body):
+```powershell
+$headers = @{ Authorization = "Bearer <token>"; 'Idempotency-Key' = '<idempotency-key>' }
+$body = @{ amountCents = 500 } | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri "http://localhost:8080/api/v1/orders/<orderId>/refund" -Body $body -Headers $headers -ContentType 'application/json'
+```
+
+### Examples — cURL equivalents
+
+Authorize (cURL):
+```bash
+curl -X POST \
+	-H "Authorization: Bearer <token>" \
+	-H "Idempotency-Key: <idempotency-key>" \
+	http://localhost:8080/api/v1/orders/<orderId>/authorize
+```
+
+Capture (cURL):
+```bash
+curl -X POST \
+	-H "Authorization: Bearer <token>" \
+	-H "Idempotency-Key: <idempotency-key>" \
+	http://localhost:8080/api/v1/orders/<orderId>/capture
+```
+
+Void (cURL):
+```bash
+curl -X POST \
+	-H "Authorization: Bearer <token>" \
+	-H "Idempotency-Key: <idempotency-key>" \
+	http://localhost:8080/api/v1/orders/<orderId>/void
+```
+
+Refund (cURL, with body):
+```bash
+curl -X POST \
+	-H "Authorization: Bearer <token>" \
+	-H "Idempotency-Key: <idempotency-key>" \
+	-H "Content-Type: application/json" \
+	-d '{"amountCents":500}' \
+	http://localhost:8080/api/v1/orders/<orderId>/refund
+```
+
+---
+
+### Expected JSON responses (examples)
+
+The service returns an `OrderResponse` that includes the order state. For payment operations you will usually also want the latest transaction details. Example combined response snippets below show the common fields you can expect:
+
+Authorize success example:
+```json
+{
+	"transactionId": "auth-1234",
+	"orderId": "2e7b6c3d-15e7-4b45-abcc-53d6bca542f7",
+	"status": "AUTHORIZED",
+	"correlationId": "6f6a1c2e-3b2d-4a1f-9f6a-0b7c8d9e0f1a"
+}
+```
+
+Capture success example:
+```json
+{
+	"transactionId": "cap-5678",
+	"orderId": "2e7b6c3d-15e7-4b45-abcc-53d6bca542f7",
+	"status": "CAPTURED",
+	"correlationId": "6f6a1c2e-3b2d-4a1f-9f6a-0b7c8d9e0f1a"
+}
+```
+
+Void success example:
+```json
+{
+	"transactionId": "void-9012",
+	"orderId": "2e7b6c3d-15e7-4b45-abcc-53d6bca542f7",
+	"status": "VOIDED",
+	"correlationId": "6f6a1c2e-3b2d-4a1f-9f6a-0b7c8d9e0f1a"
+}
+```
+
+Refund success example:
+```json
+{
+	"transactionId": "refund-3456",
+	"orderId": "2e7b6c3d-15e7-4b45-abcc-53d6bca542f7",
+	"status": "REFUNDED",
+	"correlationId": "6f6a1c2e-3b2d-4a1f-9f6a-0b7c8d9e0f1a"
+}
+```
+
+Note: actual responses may include additional order fields (amountCents, currency, timestamps) and transaction metadata depending on gateway responses and your configuration.
+
+---
+
+### Implementation note
+
+Currently the `PaymentService` uses a no-op Authorize.Net gateway placeholder in local/dev mode so the application can run and the API wiring, idempotency, and persistence can be exercised without real sandbox credentials. The placeholder will be replaced with the full Authorize.Net sandbox implementation in a subsequent update.
+
+

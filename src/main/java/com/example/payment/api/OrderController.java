@@ -32,4 +32,38 @@ public class OrderController {
         if (resp == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(resp);
     }
+
+    @PostMapping("/{id}/authorize")
+    public ResponseEntity<com.example.payment.api.dto.OrderResponse> authorizeOrder(@PathVariable("id") String id) {
+        com.example.payment.api.dto.OrderResponse resp = orderService.authorizeOrder(id);
+        if (resp == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(resp);
+    }
+
+    @PostMapping("/{id}/capture")
+    public ResponseEntity<com.example.payment.api.dto.OrderResponse> captureOrder(@PathVariable("id") String id) {
+        com.example.payment.api.dto.OrderResponse resp = orderService.captureOrder(id);
+        if (resp == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(resp);
+    }
+
+    @PostMapping("/{id}/void")
+    public ResponseEntity<com.example.payment.api.dto.OrderResponse> voidOrder(@PathVariable("id") String id) {
+        com.example.payment.api.dto.OrderResponse resp = orderService.voidOrder(id);
+        if (resp == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(resp);
+    }
+
+    @PostMapping("/{id}/refund")
+    public ResponseEntity<com.example.payment.api.dto.OrderResponse> refundOrder(@PathVariable("id") String id, @RequestBody(required = false) java.util.Map<String, Object> body) {
+        Long amount = null;
+        if (body != null && body.containsKey("amountCents")) {
+            try {
+                amount = Long.parseLong(body.get("amountCents").toString());
+            } catch (Exception ex) { amount = null; }
+        }
+        com.example.payment.api.dto.OrderResponse resp = orderService.refundOrder(id, amount);
+        if (resp == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(resp);
+    }
 }
