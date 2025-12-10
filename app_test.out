@@ -1,0 +1,73 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.12)
+
+2025-12-10 16:18:28.360  INFO 103336 --- [           main] com.example.payment.Application          : Starting Application v0.0.1-SNAPSHOT using Java 1.8.0_452 on RahulSi-Win with PID 103336 (C:\Users\Rahul\Documents\springboot-payment-orchestrator\target\springboot-payment-orchestrator-0.0.1-SNAPSHOT.jar started by Rahul in C:\Users\Rahul\Documents\springboot-payment-orchestrator)
+2025-12-10 16:18:28.366  INFO 103336 --- [           main] com.example.payment.Application          : The following 1 profile is active: "local"
+2025-12-10 16:18:29.592  INFO 103336 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-10 16:18:29.732  INFO 103336 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 115 ms. Found 6 JPA repository interfaces.
+2025-12-10 16:18:31.996  INFO 103336 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2025-12-10 16:18:32.036  INFO 103336 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-10 16:18:32.043  INFO 103336 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.75]
+2025-12-10 16:18:32.208  INFO 103336 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-10 16:18:32.221  INFO 103336 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3793 ms
+2025-12-10 16:18:32.567  INFO 103336 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-12-10 16:18:32.967  INFO 103336 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-12-10 16:18:33.009  INFO 103336 --- [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:paymentdb'
+2025-12-10 16:18:33.515  INFO 103336 --- [           main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 8.5.13 by Redgate
+2025-12-10 16:18:33.521  INFO 103336 --- [           main] o.f.c.internal.license.VersionPrinter    : See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13
+2025-12-10 16:18:33.525  INFO 103336 --- [           main] o.f.c.internal.license.VersionPrinter    : 
+2025-12-10 16:18:33.569  INFO 103336 --- [           main] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:paymentdb (H2 2.1)
+2025-12-10 16:18:33.639  WARN 103336 --- [           main] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: H2 2.1.214 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.1.210.
+2025-12-10 16:18:33.693  INFO 103336 --- [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.021s)
+2025-12-10 16:18:33.701  INFO 103336 --- [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2025-12-10 16:18:33.744  INFO 103336 --- [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2025-12-10 16:18:33.772  INFO 103336 --- [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1 - init"
+2025-12-10 16:18:33.797  INFO 103336 --- [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "2 - idempotency extend"
+2025-12-10 16:18:33.835  INFO 103336 --- [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "3 - transactions gateway fields"
+2025-12-10 16:18:33.855  INFO 103336 --- [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "4 - subscriptions"
+2025-12-10 16:18:33.868  INFO 103336 --- [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "5 - add updated at to subscriptions"
+2025-12-10 16:18:33.879  INFO 103336 --- [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 5 migrations to schema "PUBLIC", now at version v5 (execution time 00:00.140s)
+2025-12-10 16:18:34.166  INFO 103336 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-10 16:18:34.295  INFO 103336 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.15.Final
+2025-12-10 16:18:34.740  INFO 103336 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2025-12-10 16:18:34.937  INFO 103336 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2025-12-10 16:18:36.349  INFO 103336 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-10 16:18:36.375  INFO 103336 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-10 16:18:38.523  INFO 103336 --- [           main] c.e.p.diagnostics.ShutdownDiagnostics    : ShutdownDiagnostics initialized. Registering JVM shutdown hook to capture diagnostics.
+2025-12-10 16:18:38.575  WARN 103336 --- [           main] c.e.payment.config.AuthorizeNetConfig    : Authorize.Net credentials not configured (authorize-net.api.login-id / transaction-key). Skipping MerchantAuthentication bean creation.
+2025-12-10 16:18:38.701  WARN 103336 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: e5fc200e-d4af-4f38-bc3e-d45662691109
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-12-10 16:18:39.028  INFO 103336 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@473b3b7a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1734f68, org.springframework.security.web.context.SecurityContextPersistenceFilter@408b35bf, org.springframework.security.web.header.HeaderWriterFilter@37d80fe7, org.springframework.security.web.authentication.logout.LogoutFilter@596df867, com.example.payment.security.JwtAuthenticationFilter@77b7ffa4, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@15bcf458, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@43c67247, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5ed190be, org.springframework.security.web.session.SessionManagementFilter@e3cee7b, org.springframework.security.web.access.ExceptionTranslationFilter@40bffbca, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@3aacf32a]
+2025-12-10 16:18:39.160  WARN 103336 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-10 16:18:42.084  INFO 103336 --- [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoint(s) beneath base path '/actuator'
+2025-12-10 16:18:42.314  INFO 103336 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2025-12-10 16:18:42.381  INFO 103336 --- [   scheduling-1] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob starting correlationId=47fea481-8423-4e0d-acb6-28db1607922d
+2025-12-10 16:18:42.385  INFO 103336 --- [           main] com.example.payment.Application          : Started Application in 14.732 seconds (JVM running for 15.422)
+2025-12-10 16:18:42.571  INFO 103336 --- [   scheduling-1] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob completed correlationId=47fea481-8423-4e0d-acb6-28db1607922d processed=0
+2025-12-10 16:18:42.599  INFO 103336 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-10 16:18:42.601  INFO 103336 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-12-10 16:18:42.610  INFO 103336 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 6 ms
+2025-12-10 16:18:43.481  INFO 103336 --- [nio-8080-exec-2] c.e.p.s.impl.SubscriptionServiceImpl     : Created subscription a94550a1-dea3-483f-a1a2-ff612bbdeba8 for customer due-cust-2 correlationId=cli-test-3
+2025-12-10 16:18:43.491  INFO 103336 --- [nio-8080-exec-2] c.e.payment.api.SubscriptionController   : Created subscription a94550a1-dea3-483f-a1a2-ff612bbdeba8 for customer due-cust-2 correlationId=cli-test-3
+2025-12-10 16:18:43.575  INFO 103336 --- [nio-8080-exec-5] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob starting correlationId=5c887a5c-bfc7-49f7-8bcc-22c1e2927c0c
+2025-12-10 16:18:43.595  INFO 103336 --- [nio-8080-exec-5] c.e.p.e.SubscriptionChargedEventListener : SubscriptionChargedEvent published subscriptionId=a94550a1-dea3-483f-a1a2-ff612bbdeba8 amount=250 correlationId=5c887a5c-bfc7-49f7-8bcc-22c1e2927c0c eventSchemaVersion=1.0 timestamp=2025-12-10T10:48:43.594Z
+2025-12-10 16:18:43.598  INFO 103336 --- [nio-8080-exec-5] c.e.p.s.impl.SubscriptionServiceImpl     : Renewed subscription a94550a1-dea3-483f-a1a2-ff612bbdeba8 and created transaction 1d4ce4be-0068-4637-90c8-623997d11cb1 correlationId=5c887a5c-bfc7-49f7-8bcc-22c1e2927c0c
+2025-12-10 16:18:43.603  INFO 103336 --- [nio-8080-exec-5] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob completed correlationId=5c887a5c-bfc7-49f7-8bcc-22c1e2927c0c processed=1
+2025-12-10 16:19:42.600  INFO 103336 --- [   scheduling-1] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob starting correlationId=47987c0f-9770-4f57-a987-bd899893c097
+2025-12-10 16:19:42.609  INFO 103336 --- [   scheduling-1] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob completed correlationId=47987c0f-9770-4f57-a987-bd899893c097 processed=0
+2025-12-10 16:20:42.627  INFO 103336 --- [   scheduling-1] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob starting correlationId=8b4dd660-bd7f-41b1-b2a9-a811c0efaeef
+2025-12-10 16:20:42.631  INFO 103336 --- [   scheduling-1] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob completed correlationId=8b4dd660-bd7f-41b1-b2a9-a811c0efaeef processed=0
+2025-12-10 16:21:42.641  INFO 103336 --- [   scheduling-1] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob starting correlationId=19f74912-cac4-4000-a985-b4e22045f6ff
+2025-12-10 16:21:42.665  INFO 103336 --- [   scheduling-1] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob completed correlationId=19f74912-cac4-4000-a985-b4e22045f6ff processed=0
+2025-12-10 16:22:42.685  INFO 103336 --- [   scheduling-1] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob starting correlationId=d7e0f84e-2c6d-43f5-9b9a-bf8dfe61266e
+2025-12-10 16:22:42.702  INFO 103336 --- [   scheduling-1] c.e.payment.jobs.ReconciliationJob       : ReconciliationJob completed correlationId=d7e0f84e-2c6d-43f5-9b9a-bf8dfe61266e processed=0
