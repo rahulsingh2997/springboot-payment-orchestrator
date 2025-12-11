@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import io.micrometer.core.instrument.MeterRegistry;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -21,6 +23,9 @@ public class WebhookServiceImpl implements WebhookService {
 
     private final WebhookEventRepository repository;
     private final ApplicationEventPublisher publisher;
+
+    @Autowired(required = false)
+    private MeterRegistry meterRegistry;
 
     public WebhookServiceImpl(WebhookEventRepository repository, ApplicationEventPublisher publisher) {
         this.repository = repository;
@@ -40,6 +45,12 @@ public class WebhookServiceImpl implements WebhookService {
             ent.setReceivedAt(Instant.now());
             repository.save(ent);
 
+            if (meterRegistry != null) {
+                try {
+                    meterRegistry.counter("webhook_received_total").increment();
+                } catch (Exception ignore) {}
+            }
+
             // synchronous processing (placeholder) - mark processing and processed
             ent.setStatus(WebhookEventStatus.PROCESSING);
             repository.save(ent);
@@ -50,6 +61,12 @@ public class WebhookServiceImpl implements WebhookService {
             ent.setStatus(WebhookEventStatus.PROCESSED);
             ent.setProcessedAt(Instant.now());
             repository.save(ent);
+
+            if (meterRegistry != null) {
+                try {
+                    meterRegistry.counter("webhook_processed_total").increment();
+                } catch (Exception ignore) {}
+            }
 
             log.info("webhook processed id={} source={} correlationId={}", id, source, correlationId);
             return id;

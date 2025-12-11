@@ -7,3 +7,12 @@ spring:
 app:
   jwt:
     secret: ${JWT_SECRET:dev-secret}
+spring:
+  profiles: dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:dev-secret}

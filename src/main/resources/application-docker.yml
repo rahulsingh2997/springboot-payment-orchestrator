@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/paymentdb
+    username: postgres
+    password: postgres
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+
+# Optional Otel/Jaeger
+opentelemetry:
+  exporter:
+    jaeger:
+      endpoint: http://jaeger:14268/api/traces

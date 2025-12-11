@@ -1,0 +1,10 @@
+﻿{
+    "id":  "b482bc72-0b07-4403-9240-15be842d6915",
+    "externalOrderId":  "mp11-order-1",
+    "customerId":  "cust-1",
+    "amountCents":  1000,
+    "currency":  "USD",
+    "status":  "AUTHORIZED",
+    "createdAt":  "2025-12-11T10:26:13.698Z",
+    "updatedAt":  "2025-12-11T10:26:13.908Z"
+}

@@ -1,0 +1,10 @@
+﻿{
+    "id":  "c712b768-3b78-4dd8-a8fa-96b0c9bfb60b",
+    "externalOrderId":  "mp11-order-2",
+    "customerId":  "cust-1",
+    "amountCents":  500,
+    "currency":  "USD",
+    "status":  "PENDING",
+    "createdAt":  "2025-12-11T10:26:13.780Z",
+    "updatedAt":  "2025-12-11T10:26:13.780Z"
+}

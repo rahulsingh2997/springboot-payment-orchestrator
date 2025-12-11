@@ -1,0 +1,5 @@
+﻿{
+    "header":  "SHA512=559d8b8e71cb488851d73368e4ceb89c8b6c8822c5f926b0b8fe5c9b630ed73745f5934f1bdf581f933fd744aef37d9accb34bbb3fff0909eaba6839dd4f132f",
+    "correlationId":  "33fd927c-7157-4b7e-9ec5-6673832fcb6f",
+    "payload":  "{\"event\":\"test\",\"id\":\"mp11-webhook-1\"}"
+}

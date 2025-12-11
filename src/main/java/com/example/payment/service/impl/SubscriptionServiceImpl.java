@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import io.micrometer.core.instrument.MeterRegistry;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,6 +28,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final TransactionRepository transactionRepository;
     @Autowired(required = false)
     private ApplicationEventPublisher eventPublisher;
+    @Autowired(required = false)
+    private MeterRegistry meterRegistry;
 
     public SubscriptionServiceImpl(SubscriptionRepository subscriptionRepository, TransactionRepository transactionRepository) {
         this.subscriptionRepository = subscriptionRepository;
@@ -47,6 +50,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         req.setNextBillingAt(now.plusSeconds( (long)interval * 24 * 3600 ));
         subscriptionRepository.save(req);
         log.info("Created subscription {} for customer {} correlationId={}", id, req.getCustomerId(), MDC.get("correlationId"));
+
+        if (meterRegistry != null) {
+            try {
+                meterRegistry.counter("subscription_created_total").increment();
+            } catch (Exception ignore) {}
+        }
         return req;
     }
 
@@ -98,5 +107,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
 
         log.info("Renewed subscription {} and created transaction {} correlationId={}", s.getId(), t.getId(), MDC.get("correlationId"));
+
+        if (meterRegistry != null) {
+            try {
+                meterRegistry.counter("subscription_renewed_total").increment();
+            } catch (Exception ignore) {}
+        }
     }
 }

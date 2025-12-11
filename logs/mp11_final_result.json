@@ -1,0 +1,14 @@
+﻿{
+    "timestamp":  "2025-12-11T15:56:25.1972385+05:30",
+    "pass":  true,
+    "parsed":  {
+                   "payment_voided_total":  "1.0",
+                   "payment_refunded_total":  "1.0",
+                   "webhook_received_total":  "1.0",
+                   "payment_captured_total":  "1.0",
+                   "subscription_created_total":  "1.0",
+                   "subscription_renewed_total":  "1.0",
+                   "webhook_processed_total":  "1.0",
+                   "payment_authorized_total":  "2.0"
+               }
+}

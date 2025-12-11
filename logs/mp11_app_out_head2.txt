@@ -1,0 +1,13 @@
+﻿
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::               (v2.7.12)
+
+{"@timestamp":"2025-12-10T22:45:59.898+05:30","@version":"1","message":"Starting Application v0.0.1-SNAPSHOT using Java 1.8.0_452 on RahulSi-Win with PID 27148 (C:\\Users\\Rahul\\Documents\\springboot-payment-orchestrator\\target\\springboot-payment-orchestrator-0.0.1-SNAPSHOT.jar started by Rahul in C:\\Users\\Rahul\\Documents\\springboot-payment-orchestrator)","logger_name":"com.example.payment.Application","thread_name":"main","level":"INFO","level_value":20000}
+{"@timestamp":"2025-12-10T22:45:59.944+05:30","@version":"1","message":"The following 1 profile is active: \"local\"","logger_name":"com.example.payment.Application","thread_name":"main","level":"INFO","level_value":20000}
+{"@timestamp":"2025-12-10T22:46:02.080+05:30","@version":"1","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000}
+{"@timestamp":"2025-12-10T22:46:02.273+05:30","@version":"1","message":"Finished Spring Data repository scanning in 154 ms. Found 6 JPA repository interfaces.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000}

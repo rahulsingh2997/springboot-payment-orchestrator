@@ -31,7 +31,7 @@ public class SecurityConfig {
             .authenticationEntryPoint(unauthorizedEntryPoint())
             .and()
             .authorizeRequests()
-            .antMatchers("/api/v1/health", "/api/v1/auth/**", "/actuator/**", "/webhooks/**").permitAll()
+            .antMatchers("/api/v1/health", "/api/v1/auth/**", "/actuator/**", "/webhooks/**", "/api/v1/webhooks/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

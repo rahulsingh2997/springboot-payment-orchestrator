@@ -16,6 +16,7 @@ import org.slf4j.MDC;
 import com.example.payment.service.InvalidOrderStateException;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
+import io.micrometer.core.instrument.MeterRegistry;
 
 import com.example.payment.gateway.mapper.AuthorizeNetRequest;
 import com.example.payment.gateway.mapper.AuthorizeNetResponse;
@@ -40,6 +41,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired(required = false)
     private ApplicationEventPublisher eventPublisher;
+
+    @Autowired(required = false)
+    private MeterRegistry meterRegistry;
 
     @Value("${payment.auto-purchase:false}")
     private boolean autoPurchase;
@@ -174,6 +178,12 @@ public class OrderServiceImpl implements OrderService {
                 e.setUpdatedAt(Instant.now());
                 if (orderRepository != null) orderRepository.save(e);
 
+                if (meterRegistry != null) {
+                    try {
+                        meterRegistry.counter("payment_authorized_total").increment();
+                    } catch (Exception ignore) {}
+                }
+
                 if (eventPublisher != null) {
                     // enrich event with correlationId, timestamp and schema version
                     String cid = org.slf4j.MDC.get("correlationId");
@@ -231,6 +241,12 @@ public class OrderServiceImpl implements OrderService {
                 e.setStatus("CAPTURED");
                 e.setUpdatedAt(Instant.now());
                 if (orderRepository != null) orderRepository.save(e);
+
+                        if (meterRegistry != null) {
+                            try {
+                                meterRegistry.counter("payment_captured_total").increment();
+                            } catch (Exception ignore) {}
+                        }
 
                         if (eventPublisher != null) {
                             String cid = org.slf4j.MDC.get("correlationId");
@@ -293,6 +309,12 @@ public class OrderServiceImpl implements OrderService {
                     String cid = org.slf4j.MDC.get("correlationId");
                     eventPublisher.publishEvent(new com.example.payment.events.PaymentVoidedEvent(e.getId(), v.getTransactionId(), cid, Instant.now(), "1.0"));
                 }
+
+                    if (meterRegistry != null) {
+                        try {
+                            meterRegistry.counter("payment_voided_total").increment();
+                        } catch (Exception ignore) {}
+                    }
             }
         } catch (Exception ex) {
             // swallow
@@ -351,6 +373,12 @@ public class OrderServiceImpl implements OrderService {
                     String cid = org.slf4j.MDC.get("correlationId");
                     eventPublisher.publishEvent(new com.example.payment.events.PaymentRefundedEvent(e.getId(), ref.getTransactionId(), refundAmount, cid, Instant.now(), "1.0"));
                 }
+
+                    if (meterRegistry != null) {
+                        try {
+                            meterRegistry.counter("payment_refunded_total").increment();
+                        } catch (Exception ignore) {}
+                    }
             }
         } catch (Exception ex) {
             // swallow
