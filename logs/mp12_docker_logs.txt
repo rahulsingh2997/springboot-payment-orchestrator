@@ -1,0 +1,211 @@
+﻿jaeger-1  | 2025/12/11 12:49:54 maxprocs: Leaving GOMAXPROCS=12: CPU quota undefined
+jaeger-1  | {"level":"info","ts":1765457395.0021682,"caller":"flags/service.go:119","msg":"Mounting metrics handler on admin server","route":"/metrics"}
+jaeger-1  | {"level":"info","ts":1765457395.002256,"caller":"flags/service.go:125","msg":"Mounting expvar handler on admin server","route":"/debug/vars"}
+jaeger-1  | {"level":"info","ts":1765457395.003441,"caller":"flags/admin.go:129","msg":"Mounting health check on admin server","route":"/"}
+jaeger-1  | {"level":"info","ts":1765457395.004164,"caller":"flags/admin.go:143","msg":"Starting admin HTTP server","http-addr":":14269"}
+jaeger-1  | {"level":"info","ts":1765457395.0045676,"caller":"flags/admin.go:121","msg":"Admin server started","http.host-port":"[::]:14269","health-status":"unavailable"}
+jaeger-1  | {"level":"info","ts":1765457395.0107584,"caller":"memory/factory.go:66","msg":"Memory storage initialized","configuration":{"MaxTraces":0}}
+jaeger-1  | {"level":"info","ts":1765457395.0117335,"caller":"static/strategy_store.go:138","msg":"Loading sampling strategies","filename":"/etc/jaeger/sampling_strategies.json"}
+jaeger-1  | {"level":"info","ts":1765457395.0435772,"caller":"channelz/funcs.go:340","msg":"[core][Server #1] Server created","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.043855,"caller":"server/grpc.go:104","msg":"Starting jaeger-collector gRPC server","grpc.host-port":"[::]:14250"}
+jaeger-1  | {"level":"info","ts":1765457395.0439277,"caller":"server/http.go:56","msg":"Starting jaeger-collector HTTP server","http host-port":":14268"}
+jaeger-1  | {"level":"info","ts":1765457395.0444756,"caller":"channelz/funcs.go:340","msg":"[core][Server #1 ListenSocket #2] ListenSocket created","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.045001,"caller":"server/zipkin.go:52","msg":"Not listening for Zipkin HTTP traffic, port not configured"}
+jaeger-1  | {"level":"info","ts":1765457395.0450497,"caller":"grpc/builder.go:73","msg":"Agent requested insecure grpc connection to collector(s)"}
+jaeger-1  | {"level":"info","ts":1765457395.045196,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3] Channel created","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0453525,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3] original dial target is: \":14250\"","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.04554,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3] dial target \":14250\" parse failed: parse \":14250\": missing protocol scheme","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0456815,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3] fallback to scheme \"passthrough\"","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0457602,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3] parsed dial target is: {Scheme:passthrough Authority: URL:{Scheme:passthrough Opaque: User: Host: Path:/:14250 RawPath: OmitHost:false ForceQuery:false RawQuery: Fragment: RawFragment:}}","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0457864,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3] Channel authority set to \"localhost:14250\"","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0464182,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3] Resolver state updated: {\n  \"Addresses\": [\n    {\n      \"Addr\": \":14250\",\n      \"ServerName\": \"\",\n      \"Attributes\": null,\n      \"BalancerAttributes\": null,\n      \"Type\": 0,\n      \"Metadata\": null\n    }\n  ],\n  \"ServiceConfig\": null,\n  \"Attributes\": null\n} (resolver returned new addresses)","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.046575,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3] Channel switches to new LB policy \"round_robin\"","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0469487,"caller":"grpclog/component.go:55","msg":"[balancer]base.baseBalancer: got new ClientConn state: {{[{\n  \"Addr\": \":14250\",\n  \"ServerName\": \"\",\n  \"Attributes\": null,\n  \"BalancerAttributes\": null,\n  \"Type\": 0,\n  \"Metadata\": null\n}] <nil> <nil>} <nil>}","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0470135,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3 SubChannel #4] Subchannel created","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.047083,"caller":"grpclog/component.go:71","msg":"[roundrobin]roundrobinPicker: Build called with info: {map[]}","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0470965,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3] Channel Connectivity change to CONNECTING","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0472,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3 SubChannel #4] Subchannel Connectivity change to CONNECTING","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.047346,"caller":"grpc/builder.go:113","msg":"Checking connection to collector"}
+jaeger-1  | {"level":"info","ts":1765457395.047412,"caller":"grpc/builder.go:124","msg":"Agent collector connection state change","dialTarget":":14250","status":"CONNECTING"}
+jaeger-1  | {"level":"info","ts":1765457395.0475628,"caller":"grpclog/component.go:71","msg":"[balancer]base.baseBalancer: handle SubConn state change: 0xc00021be00, CONNECTING","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0482197,"caller":"./main.go:256","msg":"Starting agent"}
+jaeger-1  | {"level":"info","ts":1765457395.0473948,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3 SubChannel #4] Subchannel picks a new address \":14250\" to connect","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0484211,"caller":"app/agent.go:69","msg":"Starting jaeger-agent HTTP server","http-port":5778}
+jaeger-1  | {"level":"info","ts":1765457395.0483835,"caller":"querysvc/query_service.go:134","msg":"Archive storage not created","reason":"archive storage not supported"}
+jaeger-1  | {"level":"info","ts":1765457395.0508943,"caller":"app/flags.go:136","msg":"Archive storage not initialized"}
+jaeger-1  | {"level":"info","ts":1765457395.0523062,"caller":"channelz/funcs.go:340","msg":"[core][Server #5] Server created","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.053087,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] Channel created","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.053275,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] original dial target is: \":16685\"","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0533557,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] dial target \":16685\" parse failed: parse \":16685\": missing protocol scheme","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.053411,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] fallback to scheme \"passthrough\"","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0535429,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] parsed dial target is: {Scheme:passthrough Authority: URL:{Scheme:passthrough Opaque: User: Host: Path:/:16685 RawPath: OmitHost:false ForceQuery:false RawQuery: Fragment: RawFragment:}}","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0536034,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] Channel authority set to \"localhost:16685\"","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0537598,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] Resolver state updated: {\n  \"Addresses\": [\n    {\n      \"Addr\": \":16685\",\n      \"ServerName\": \"\",\n      \"Attributes\": null,\n      \"BalancerAttributes\": null,\n      \"Type\": 0,\n      \"Metadata\": null\n    }\n  ],\n  \"ServiceConfig\": null,\n  \"Attributes\": null\n} (resolver returned new addresses)","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0539527,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] Channel switches to new LB policy \"pick_first\"","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0540302,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7 SubChannel #8] Subchannel created","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0544586,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] Channel Connectivity change to CONNECTING","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.054667,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7 SubChannel #8] Subchannel Connectivity change to CONNECTING","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0547194,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7 SubChannel #8] Subchannel picks a new address \":16685\" to connect","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.055312,"caller":"grpclog/component.go:71","msg":"[core]pickfirstBalancer: UpdateSubConnState: 0xc000816048, {CONNECTING <nil>}","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.055629,"caller":"grpclog/component.go:71","msg":"[core]Creating new client transport to \"{\\n  \\\"Addr\\\": \\\":16685\\\",\\n  \\\"ServerName\\\": \\\"localhost:16685\\\",\\n  \\\"Attributes\\\": null,\\n  \\\"BalancerAttributes\\\": null,\\n  \\\"Type\\\": 0,\\n  \\\"Metadata\\\": null\\n}\": connection error: desc = \"transport: Error while dialing: dial tcp :16685: connect: connection refused\"","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"warn","ts":1765457395.055713,"caller":"channelz/funcs.go:342","msg":"[core][Channel #7 SubChannel #8] grpc: addrConn.createTransport failed to connect to {\n  \"Addr\": \":16685\",\n  \"ServerName\": \"localhost:16685\",\n  \"Attributes\": null,\n  \"BalancerAttributes\": null,\n  \"Type\": 0,\n  \"Metadata\": null\n}. Err: connection error: desc = \"transport: Error while dialing: dial tcp :16685: connect: connection refused\"","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0558934,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7 SubChannel #8] Subchannel Connectivity change to TRANSIENT_FAILURE","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0559554,"caller":"grpclog/component.go:71","msg":"[core]pickfirstBalancer: UpdateSubConnState: 0xc000816048, {TRANSIENT_FAILURE connection error: desc = \"transport: Error while dialing: dial tcp :16685: connect: connection refused\"}","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0559783,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] Channel Connectivity change to TRANSIENT_FAILURE","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0572495,"caller":"app/static_handler.go:181","msg":"UI config path not provided, config file will not be watched"}
+jaeger-1  | {"level":"info","ts":1765457395.0576928,"caller":"app/server.go:218","msg":"Query server started","http_addr":"[::]:16686","grpc_addr":"[::]:16685"}
+jaeger-1  | {"level":"info","ts":1765457395.0578089,"caller":"healthcheck/handler.go:129","msg":"Health Check state change","status":"ready"}
+jaeger-1  | {"level":"info","ts":1765457395.057846,"caller":"app/server.go:301","msg":"Starting GRPC server","port":16685,"addr":":16685"}
+jaeger-1  | {"level":"info","ts":1765457395.0578794,"caller":"channelz/funcs.go:340","msg":"[core][Server #5 ListenSocket #9] ListenSocket created","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0580597,"caller":"app/server.go:282","msg":"Starting HTTP server","port":16686,"addr":":16686"}
+jaeger-1  | {"level":"info","ts":1765457395.0584166,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3 SubChannel #4] Subchannel Connectivity change to READY","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0585177,"caller":"grpclog/component.go:71","msg":"[balancer]base.baseBalancer: handle SubConn state change: 0xc00021be00, READY","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0589862,"caller":"grpclog/component.go:71","msg":"[roundrobin]roundrobinPicker: Build called with info: {map[0xc00021be00:{{\n  \"Addr\": \":14250\",\n  \"ServerName\": \"\",\n  \"Attributes\": null,\n  \"BalancerAttributes\": null,\n  \"Type\": 0,\n  \"Metadata\": null\n}}]}","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0591588,"caller":"channelz/funcs.go:340","msg":"[core][Channel #3] Channel Connectivity change to READY","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457395.0592368,"caller":"grpc/builder.go:124","msg":"Agent collector connection state change","dialTarget":":14250","status":"READY"}
+jaeger-1  | {"level":"info","ts":1765457396.0565915,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7 SubChannel #8] Subchannel Connectivity change to IDLE","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457396.056798,"caller":"grpclog/component.go:71","msg":"[core]pickfirstBalancer: UpdateSubConnState: 0xc000816048, {IDLE connection error: desc = \"transport: Error while dialing: dial tcp :16685: connect: connection refused\"}","system":"grpc","grpc_log":true}
+jaeger-1  | {"level":"info","ts":1765457396.056845,"caller":"channelz/funcs.go:340","msg":"[core][Channel #7] Channel Connectivity change to IDLE","system":"grpc","grpc_log":true}
+app-1     | 
+app-1     |   .   ____          _            __ _ _
+app-1     |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+app-1     | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+app-1     |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+app-1     |   '  |____| .__|_| |_|_| |_\__, | / / / /
+app-1     |  =========|_|==============|___/=/_/_/_/
+app-1     |  :: Spring Boot ::               (v2.7.12)
+app-1     | 
+app-1     | {"@timestamp":"2025-12-11T12:49:58.290Z","@version":"1","message":"Starting Application v0.0.1-SNAPSHOT using Java 11.0.29 on a4079a1f4b45 with PID 1 (/app/app.jar started by root in /app)","logger_name":"com.example.payment.Application","thread_name":"main","level":"INFO","level_value":20000}
+app-1     | {"@timestamp":"2025-12-11T12:49:58.306Z","@version":"1","message":"The following 1 profile is active: \"docker\"","logger_name":"com.example.payment.Application","thread_name":"main","level":"INFO","level_value":20000}
+app-1     | {"@timestamp":"2025-12-11T12:50:00.460Z","@version":"1","message":"Bootstrapping Spring Data JPA repositories in DEFAULT mode.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000}
+app-1     | {"@timestamp":"2025-12-11T12:50:00.564Z","@version":"1","message":"Finished Spring Data repository scanning in 90 ms. Found 6 JPA repository interfaces.","logger_name":"org.springframework.data.repository.config.RepositoryConfigurationDelegate","thread_name":"main","level":"INFO","level_value":20000}
+app-1     | {"@timestamp":"2025-12-11T12:50:02.155Z","@version":"1","message":"Tomcat initialized with port(s): 8080 (http)","logger_name":"org.springframework.boot.web.embedded.tomcat.TomcatWebServer","thread_name":"main","level":"INFO","level_value":20000}
+app-1     | {"@timestamp":"2025-12-11T12:50:02.179Z","@version":"1","message":"Starting service [Tomcat]","logger_name":"org.apache.catalina.core.StandardService","thread_name":"main","level":"INFO","level_value":20000}
+app-1     | {"@timestamp":"2025-12-11T12:50:02.180Z","@version":"1","message":"Starting Servlet engine: [Apache Tomcat/9.0.75]","logger_name":"org.apache.catalina.core.StandardEngine","thread_name":"main","level":"INFO","level_value":20000}
+app-1     | {"@timestamp":"2025-12-11T12:50:02.286Z","@version":"1","message":"Initializing Spring embedded WebApplicationContext","logger_name":"org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]","thread_name":"main","level":"INFO","level_value":20000}
+app-1     | {"@timestamp":"2025-12-11T12:50:02.286Z","@version":"1","message":"Root WebApplicationContext: initialization completed in 3863 ms","logger_name":"org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext","thread_name":"main","level":"INFO","level_value":20000}
+app-1     | {"@timestamp":"2025-12-11T12:50:02.692Z","@version":"1","message":"HikariPool-1 - Starting...","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000}
+app-1     | {"@timestamp":"2025-12-11T12:50:02.997Z","@version":"1","message":"HikariPool-1 - Start completed.","logger_name":"com.zaxxer.hikari.HikariDataSource","thread_name":"main","level":"INFO","level_value":20000}
+rabbitmq-1  | 2025-12-11 12:50:04.320583+00:00 [notice] <0.44.0> Application syslog exited with reason: stopped
+rabbitmq-1  | 2025-12-11 12:50:04.338750+00:00 [notice] <0.230.0> Logging: switching to configured handler(s); following messages may not be visible in this log output
+rabbitmq-1  | [38;5;87m2025-12-11 12:50:04.389417+00:00 [notice] <0.230.0> Logging: configured log handlers are now ACTIVE[0m
+rabbitmq-1  | 2025-12-11 12:50:04.974160+00:00 [info] <0.230.0> ra: starting system quorum_queues[0m
+rabbitmq-1  | 2025-12-11 12:50:04.974269+00:00 [info] <0.230.0> starting Ra system: quorum_queues in directory: /var/lib/rabbitmq/mnesia/rabbit@fb06029cc6ef/quorum/rabbit@fb06029cc6ef[0m
+rabbitmq-1  | 2025-12-11 12:50:05.158967+00:00 [info] <0.266.0> ra system 'quorum_queues' running pre init for 0 registered servers[0m
+rabbitmq-1  | 2025-12-11 12:50:05.188282+00:00 [info] <0.267.0> ra: meta data store initialised for system quorum_queues. 0 record(s) recovered[0m
+rabbitmq-1  | [38;5;87m2025-12-11 12:50:05.225822+00:00 [notice] <0.272.0> WAL: ra_log_wal init, open tbls: ra_log_open_mem_tables, closed tbls: ra_log_closed_mem_tables[0m
+rabbitmq-1  | 2025-12-11 12:50:05.248828+00:00 [info] <0.230.0> ra: starting system coordination[0m
+app-1       | {"@timestamp":"2025-12-11T12:50:03.015Z","@version":"1","message":"H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://postgres:5432/paymentdb'","logger_name":"org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.351Z","@version":"1","message":"Flyway Community Edition 8.5.13 by Redgate","logger_name":"org.flywaydb.core.internal.license.VersionPrinter","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.351Z","@version":"1","message":"See what's new here: https://flywaydb.org/documentation/learnmore/releaseNotes#8.5.13","logger_name":"org.flywaydb.core.internal.license.VersionPrinter","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.352Z","@version":"1","message":"","logger_name":"org.flywaydb.core.internal.license.VersionPrinter","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.380Z","@version":"1","message":"Database: jdbc:postgresql://postgres:5432/paymentdb (PostgreSQL 14.20)","logger_name":"org.flywaydb.core.internal.database.base.BaseDatabaseType","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.431Z","@version":"1","message":"Successfully validated 5 migrations (execution time 00:00.023s)","logger_name":"org.flywaydb.core.internal.command.DbValidate","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.452Z","@version":"1","message":"Creating Schema History table \"public\".\"flyway_schema_history\" ...","logger_name":"org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.530Z","@version":"1","message":"Current version of schema \"public\": << Empty Schema >>","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.543Z","@version":"1","message":"Migrating schema \"public\" to version \"1 - init\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.650Z","@version":"1","message":"Migrating schema \"public\" to version \"2 - idempotency extend\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.667Z","@version":"1","message":"Migrating schema \"public\" to version \"3 - transactions gateway fields\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.686Z","@version":"1","message":"Migrating schema \"public\" to version \"4 - subscriptions\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.714Z","@version":"1","message":"Migrating schema \"public\" to version \"5 - add updated at to subscriptions\"","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.727Z","@version":"1","message":"Successfully applied 5 migrations to schema \"public\", now at version v5 (execution time 00:00.206s)","logger_name":"org.flywaydb.core.internal.command.DbMigrate","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:03.949Z","@version":"1","message":"HHH000204: Processing PersistenceUnitInfo [name: default]","logger_name":"org.hibernate.jpa.internal.util.LogHelper","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:04.032Z","@version":"1","message":"HHH000412: Hibernate ORM core version 5.6.15.Final","logger_name":"org.hibernate.Version","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:04.240Z","@version":"1","message":"HCANN000001: Hibernate Commons Annotations {5.1.2.Final}","logger_name":"org.hibernate.annotations.common.Version","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:04.405Z","@version":"1","message":"HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect","logger_name":"org.hibernate.dialect.Dialect","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:05.209Z","@version":"1","message":"HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]","logger_name":"org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator","thread_name":"main","level":"INFO","level_value":20000}
+app-1       | {"@timestamp":"2025-12-11T12:50:05.221Z","@version":"1","message":"Initialized JPA EntityManagerFactory for persistence unit 'default'","logger_name":"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean","thread_name":"main","level":"INFO","level_value":20000}
+rabbitmq-1  | 2025-12-11 12:50:05.248933+00:00 [info] <0.230.0> starting Ra system: coordination in directory: /var/lib/rabbitmq/mnesia/rabbit@fb06029cc6ef/coordination/rabbit@fb06029cc6ef[0m
+rabbitmq-1  | 2025-12-11 12:50:05.253556+00:00 [info] <0.279.0> ra system 'coordination' running pre init for 0 registered servers[0m
+rabbitmq-1  | 2025-12-11 12:50:05.255613+00:00 [info] <0.280.0> ra: meta data store initialised for system coordination. 0 record(s) recovered[0m
+rabbitmq-1  | [38;5;87m2025-12-11 12:50:05.255868+00:00 [notice] <0.285.0> WAL: ra_coordination_log_wal init, open tbls: ra_coordination_log_open_mem_tables, closed tbls: ra_coordination_log_closed_mem_tables[0m
+rabbitmq-1  | 2025-12-11 12:50:05.267814+00:00 [info] <0.230.0> [0m
+rabbitmq-1  | 2025-12-11 12:50:05.267814+00:00 [info] <0.230.0>  Starting RabbitMQ 3.11.28 on Erlang 25.3.2.9 [jit][0m
+rabbitmq-1  | 2025-12-11 12:50:05.267814+00:00 [info] <0.230.0>  Copyright (c) 2007-2023 Broadcom Inc and/or its subsidiaries[0m
+rabbitmq-1  | 2025-12-11 12:50:05.267814+00:00 [info] <0.230.0>  Licensed under the MPL 2.0. Website: https://rabbitmq.com[0m
+rabbitmq-1  | 
+rabbitmq-1  |   ##  ##      RabbitMQ 3.11.28
+rabbitmq-1  |   ##  ##
+rabbitmq-1  |   ##########  Copyright (c) 2007-2023 Broadcom Inc and/or its subsidiaries
+rabbitmq-1  |   ######  ##
+rabbitmq-1  |   ##########  Licensed under the MPL 2.0. Website: https://rabbitmq.com
+rabbitmq-1  | 
+rabbitmq-1  |   Erlang:      25.3.2.9 [jit]
+rabbitmq-1  |   TLS Library: OpenSSL - OpenSSL 3.1.5 30 Jan 2024
+rabbitmq-1  |   Release series support status: supported
+rabbitmq-1  | 
+rabbitmq-1  |   Doc guides:  https://rabbitmq.com/documentation.html
+rabbitmq-1  |   Support:     https://rabbitmq.com/contact.html
+rabbitmq-1  |   Tutorials:   https://rabbitmq.com/getstarted.html
+rabbitmq-1  |   Monitoring:  https://rabbitmq.com/monitoring.html
+rabbitmq-1  | 
+rabbitmq-1  |   Logs: /var/log/rabbitmq/rabbit@fb06029cc6ef_upgrade.log
+rabbitmq-1  |         <stdout>
+rabbitmq-1  | 
+rabbitmq-1  |   Config file(s): /etc/rabbitmq/conf.d/10-defaults.conf
+rabbitmq-1  | 
+rabbitmq-1  |   Starting broker...2025-12-11 12:50:05.272473+00:00 [info] <0.230.0> [0m
+rabbitmq-1  | 2025-12-11 12:50:05.272473+00:00 [info] <0.230.0>  node           : rabbit@fb06029cc6ef[0m
+rabbitmq-1  | 2025-12-11 12:50:05.272473+00:00 [info] <0.230.0>  home dir       : /var/lib/rabbitmq[0m
+rabbitmq-1  | 2025-12-11 12:50:05.272473+00:00 [info] <0.230.0>  config file(s) : /etc/rabbitmq/conf.d/10-defaults.conf[0m
+rabbitmq-1  | 2025-12-11 12:50:05.272473+00:00 [info] <0.230.0>  cookie hash    : UTDvkrflBvwaKMiBFkRLiA==[0m
+rabbitmq-1  | 2025-12-11 12:50:05.272473+00:00 [info] <0.230.0>  log(s)         : /var/log/rabbitmq/rabbit@fb06029cc6ef_upgrade.log[0m
+rabbitmq-1  | 2025-12-11 12:50:05.272473+00:00 [info] <0.230.0>                 : <stdout>[0m
+rabbitmq-1  | 2025-12-11 12:50:05.272473+00:00 [info] <0.230.0>  database dir   : /var/lib/rabbitmq/mnesia/rabbit@fb06029cc6ef[0m
+postgres-1  | The files belonging to this database system will be owned by user "postgres".
+postgres-1  | This user must also own the server process.
+postgres-1  | 
+postgres-1  | The database cluster will be initialized with locale "en_US.utf8".
+postgres-1  | The default database encoding has accordingly been set to "UTF8".
+postgres-1  | The default text search configuration will be set to "english".
+postgres-1  | 
+postgres-1  | Data page checksums are disabled.
+postgres-1  | 
+postgres-1  | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+postgres-1  | creating subdirectories ... ok
+postgres-1  | selecting dynamic shared memory implementation ... posix
+postgres-1  | selecting default max_connections ... 100
+postgres-1  | selecting default shared_buffers ... 128MB
+postgres-1  | selecting default time zone ... UTC
+postgres-1  | creating configuration files ... ok
+postgres-1  | running bootstrap script ... ok
+postgres-1  | sh: locale: not found
+postgres-1  | 2025-12-11 12:49:56.118 UTC [35] WARNING:  no usable system locales were found
+postgres-1  | performing post-bootstrap initialization ... ok
+postgres-1  | syncing data to disk ... ok
+postgres-1  | 
+postgres-1  | 
+postgres-1  | Success. You can now start the database server using:
+postgres-1  | 
+postgres-1  |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+postgres-1  | 
+postgres-1  | initdb: warning: enabling "trust" authentication for local connections
+postgres-1  | You can change this by editing pg_hba.conf or using the option -A, or
+postgres-1  | --auth-local and --auth-host, the next time you run initdb.
+postgres-1  | waiting for server to start....2025-12-11 12:49:58.159 UTC [41] LOG:  starting PostgreSQL 14.20 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+postgres-1  | 2025-12-11 12:49:58.174 UTC [41] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2025-12-11 12:49:58.220 UTC [42] LOG:  database system was shut down at 2025-12-11 12:49:57 UTC
+postgres-1  | 2025-12-11 12:49:58.243 UTC [41] LOG:  database system is ready to accept connections
+postgres-1  |  done
+postgres-1  | server started
+postgres-1  | CREATE DATABASE
+postgres-1  | 
+postgres-1  | 
+postgres-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+postgres-1  | 
+postgres-1  | waiting for server to shut down....2025-12-11 12:49:58.968 UTC [41] LOG:  received fast shutdown request
+postgres-1  | 2025-12-11 12:49:58.981 UTC [41] LOG:  aborting any active transactions
+postgres-1  | 2025-12-11 12:49:58.983 UTC [41] LOG:  background worker "logical replication launcher" (PID 48) exited with exit code 1
+postgres-1  | 2025-12-11 12:49:58.985 UTC [43] LOG:  shutting down
+postgres-1  | 2025-12-11 12:49:59.081 UTC [41] LOG:  database system is shut down
+postgres-1  |  done
+postgres-1  | server stopped
+postgres-1  | 
+postgres-1  | PostgreSQL init process complete; ready for start up.
+postgres-1  | 
+postgres-1  | 2025-12-11 12:49:59.231 UTC [1] LOG:  starting PostgreSQL 14.20 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+postgres-1  | 2025-12-11 12:49:59.231 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+postgres-1  | 2025-12-11 12:49:59.231 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+postgres-1  | 2025-12-11 12:49:59.288 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+postgres-1  | 2025-12-11 12:49:59.342 UTC [56] LOG:  database system was shut down at 2025-12-11 12:49:59 UTC
+postgres-1  | 2025-12-11 12:49:59.385 UTC [1] LOG:  database system is ready to accept connections

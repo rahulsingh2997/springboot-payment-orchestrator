@@ -1,0 +1,9 @@
+DockerIntegrationTest: PASS
+
+Summary:
+- Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+- Total duration: ~25.7s
+
+Details and full mvn output: mvn_test_output.txt (workspace root)
+
+Generated at: 2025-12-11T13:38:22Z

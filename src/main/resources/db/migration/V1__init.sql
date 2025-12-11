@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 CREATE TABLE IF NOT EXISTS idempotency_keys (
   id VARCHAR(128) PRIMARY KEY,
   request_hash VARCHAR(256),
-  response_body CLOB,
+  response_body TEXT,
   created_at TIMESTAMP,
   version BIGINT
 );
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS idempotency_keys (
 CREATE TABLE IF NOT EXISTS webhook_events (
   id VARCHAR(64) PRIMARY KEY,
   source VARCHAR(128),
-  payload CLOB,
+  payload TEXT,
   status VARCHAR(32),
   received_at TIMESTAMP,
   processed_at TIMESTAMP,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
   action VARCHAR(128),
   resource_type VARCHAR(64),
   resource_id VARCHAR(64),
-  metadata CLOB,
+  metadata TEXT,
   created_at TIMESTAMP,
   updated_at TIMESTAMP,
   version BIGINT

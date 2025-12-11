@@ -15,7 +15,7 @@ public class WebhookEventEntity {
     @Column(name = "source")
     private String source;
 
-    @Column(name = "payload", columnDefinition = "CLOB")
+    @Column(name = "payload", columnDefinition = "TEXT")
     private String payload;
 
     @Enumerated(EnumType.STRING)

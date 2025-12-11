@@ -19,7 +19,7 @@ public class AuditLog {
     private String resourceType;
     private String resourceId;
 
-    @Column(columnDefinition = "CLOB")
+    @Column(columnDefinition = "TEXT")
     private String metadata;
 
     @Column(name = "created_at")
