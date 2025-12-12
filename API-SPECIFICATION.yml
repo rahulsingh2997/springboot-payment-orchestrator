@@ -1,3 +1,22 @@
+openapi: 3.0.1
+info:
+  title: Payment Orchestrator API (minimal)
+  version: '1.0.0'
+paths:
+  /api/orders:
+    post:
+      summary: Create order
+      requestBody:
+        required: true
+      responses:
+        '201':
+          description: Created
+  /api/payments/purchase:
+    post:
+      summary: Purchase (authorize + capture)
+      responses:
+        '200':
+          description: OK
 openapi: 3.0.3
 info:
   title: Springboot Payment Orchestrator API

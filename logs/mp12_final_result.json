@@ -1,14 +1,14 @@
 ﻿{
     "mp12_pass":  true,
-    "timestamp":  "2025-12-11T19:13:48.0035660+05:30",
+    "timestamp":  "2025-12-12T11:37:47.4251809+05:30",
     "parsed":  {
-                   "payment_voided_total":  "2.0",
-                   "payment_refunded_total":  "2.0",
-                   "webhook_received_total":  "2.0",
-                   "payment_captured_total":  "2.0",
-                   "subscription_created_total":  "2.0",
-                   "subscription_renewed_total":  "2.0",
-                   "webhook_processed_total":  "2.0",
-                   "payment_authorized_total":  "4.0"
+                   "payment_voided_total":  "1.0",
+                   "payment_refunded_total":  "1.0",
+                   "webhook_received_total":  "1.0",
+                   "payment_captured_total":  "1.0",
+                   "subscription_created_total":  "1.0",
+                   "subscription_renewed_total":  "1.0",
+                   "webhook_processed_total":  "1.0",
+                   "payment_authorized_total":  "2.0"
                }
 }

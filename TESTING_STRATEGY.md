@@ -1,3 +1,29 @@
+# Testing Strategy
+
+Scope:
+- Unit tests: JUnit 5 + Mockito for service and utility logic.
+- Integration tests: Testcontainers to run ephemeral Postgres and RabbitMQ for end-to-end flows.
+- Acceptance / Smoke tests: Run against the Docker Compose stack using the provided verification script.
+
+Commands:
+
+```powershell
+# Unit + integration tests
+mvn -B clean test
+
+# Generate JaCoCo coverage
+mvn jacoco:report
+
+# Start dev stack
+docker-compose up --build -d
+
+# Run verification script
+powershell -ExecutionPolicy Bypass -File scripts/mp12_verify_docker.ps1
+```
+
+Notes:
+- Integration tests require Docker on the machine/CI runner.
+- Keep Testcontainers logs in `mvn_test_output.txt` for evidence if needed.
 # Testing Strategy — Springboot Payment Orchestrator
 
 This document describes the recommended testing strategy for the payment orchestrator project. It covers scope, mocking approaches, coverage goals, and targeted test types (webhook, idempotency, DB transaction, API contract). The goal is repeatable, fast unit tests plus representative integration tests using Testcontainers to validate behavior against real infra (Postgres, RabbitMQ) when needed.

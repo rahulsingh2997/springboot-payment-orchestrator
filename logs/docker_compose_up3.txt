@@ -1,0 +1,37 @@
+﻿#1 [internal] load local bake definitions
+#1 reading from stdin 439B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 371B 0.0s done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/eclipse-temurin:11-jre
+#3 DONE 1.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B 0.0s done
+#4 DONE 0.0s
+
+#5 [1/3] FROM docker.io/library/eclipse-temurin:11-jre@sha256:205b9e793973788822199748dbcde6d4bd95a15d31ab2a0cedf6352d447d0ac6
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 54.13MB 3.4s done
+#6 DONE 3.4s
+
+#7 [2/3] WORKDIR /app
+#7 CACHED
+
+#8 [3/3] COPY target/springboot-payment-orchestrator-0.0.1-SNAPSHOT.jar /app/app.jar
+#8 DONE 0.3s
+
+#9 exporting to image
+#9 exporting layers
+#9 exporting layers 0.2s done
+#9 writing image sha256:0e5daf7d6a4b4985c03ddf4d2ca6c74157c520a69ac8979654f5effdd53ee5b1 done
+#9 naming to docker.io/library/springboot-payment-orchestrator-app done
+#9 DONE 0.2s
+
+#10 resolving provenance for metadata file
+#10 DONE 0.0s

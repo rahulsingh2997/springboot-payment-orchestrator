@@ -1,5 +1,27 @@
 {
   "info": {
+    "name": "Payment Orchestrator - Quick API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Order",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/orders",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api","orders"]
+        }
+      }
+    }
+  ]
+}
+{
+  "info": {
     "name": "Springboot Payment Orchestrator",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "version": "1.0.0"
